@@ -80,3 +80,12 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+# QtCreator
+# --------
+*.vsidx
+*.ipch
+*.opendb
+
+# Visual Studio directory
+/.vs

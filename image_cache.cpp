@@ -2,7 +2,7 @@
 
 class ImageCache {
 public:
-    static int max_images = 50;
+    static int max_images;
     static std::list<std::string> usage_list; // Most recently used id will be at the front of the list
     static std::unordered_map<std::string, cv::Mat> image_map; // Mat is OpenCV's matrix object to represent an image
 
