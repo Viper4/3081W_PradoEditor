@@ -12,7 +12,7 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery() {
 
 void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
     //Contributors: Taro Welches
-    //Input: string type criteria
+    //Input: const std::string& criteria
     //Purpose: To sort the displayed artwork by a certain criteria input by user
     //return: none
     std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
@@ -41,7 +41,7 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
 }
 
 void PradoEditorMobileInterface::resetImage(const std::string& artworkId) {
-    //Contributors: Taro Welchse
+    //Contributors: Taro Welches
     //Input: const std::string&artworkId
     //Purpose: To restore an edited image's values back to the original
     //Return: None
