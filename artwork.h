@@ -1,16 +1,14 @@
 #ifndef PRADO_EDITOR_INTERFACE_H
 #define PRADO_EDITOR_INTERFACE_H
 
-#include <string.h>
+#include <string>
 #include <unordered_map>
 #include <vector>
 #include <opencv2/core.hpp>  
+#include <image_cache.h>
 
 // -------------------
 // Artwork Data Struct
-// Contributors: Taro Welches
-// Purpose: provide attributes for each piece of artwork
-// Input/Output: None
 // -------------------
 struct Artwork {
     std::string id = "";
@@ -30,7 +28,6 @@ struct Artwork {
     int original_x = 0;
     int original_y = 0;
 };
-
 
 // -------------------
 // Interface Class
