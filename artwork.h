@@ -1,12 +1,14 @@
 #ifndef PRADO_EDITOR_INTERFACE_H
 #define PRADO_EDITOR_INTERFACE_H
 
-#include <string>
+#include <string.h>
+#include <unordered_map>
 #include <vector>
-#include <algorithm>
-#include <iostream>
-#include <optional>
+#include <opencv2/core.hpp>  
 
+// -------------------
+// Artwork Data Struct
+// -------------------
 struct Artwork {
     std::string id = "";
     std::string work_title = "";
@@ -26,68 +28,35 @@ struct Artwork {
     int original_y = 0;
 };
 
+// -------------------
+// Global Data Stores
+// -------------------
+inline std::unordered_map<std::string, Artwork> GlobalGallery;
 
+struct ImageCache {
+    static inline std::unordered_map<std::string, cv::Mat> image_map;
+};
+
+// -------------------
+// Interface Class
+// -------------------
 class PradoEditorMobileInterface {
 private:
-    std::vector<Artwork> gallery;
-
-    // Internal helper to find artwork by ID (returns pointer to artwork or nullptr)
-    Artwork* findArtworkById(const std::string& artworkId) {
-        for (auto& art : gallery) {
-            if (art.id == artworkId) {
-                return &art;
-            }
-        }
-        return nullptr;
-    }
+    cv::Mat getCachedImage(const std::string& artworkId);
+    Artwork* findArtworkById(const std::string& artworkId);
 
 public:
     PradoEditorMobileInterface() = default;
 
-    std::vector<Artwork> getArtworkGallery() {
-        return gallery;
-    }
-
-    void sortArtworks(const std::string& criteria) {
-        if (criteria == "Newest") {
-            std::sort(gallery.begin(), gallery.end(), [](const Artwork& a, const Artwork& b) {
-                return a.year > b.year;
-            });
-        } else if (criteria == "Oldest") {
-            std::sort(gallery.begin(), gallery.end(), [](const Artwork& a, const Artwork& b) {
-                return a.year < b.year;
-            });
-        } else if (criteria == "Artist") {
-            std::sort(gallery.begin(), gallery.end(), [](const Artwork& a, const Artwork& b) {
-                return a.author < b.author;
-            });
-        } else if (criteria == "Style") {
-            std::sort(gallery.begin(), gallery.end(), [](const Artwork& a, const Artwork& b) {
-                return a.work_subtitle < b.work_subtitle;
-            });
-        } else {
-            std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
-        }
-    }
-
-    void resetImage(const std::string& artworkId) {
-        Artwork* art = findArtworkById(artworkId);
-        if (!art) {
-            std::cerr << "Error: artwork not found\n";
-            return;
-        }
-
-        art->work_image_url = art->original_work_image_url;
-        art->x = art->original_x;
-        art->y = art->original_y;
-    }
-
-    Artwork getArtworkDescription(const std::string& artworkId);  // You still need to implement this
-    Artwork applyFilterToImage(const std::string& artworkId);      // You still need to implement this
-    void splitSubtitle(const std::string& work_subtitle);          // You still need to implement this
-    void editImage(const std::string& artworkId);                  // You still need to implement this
-    void cropImage(const std::string& artworkId, int x, int y, int width, int height); // implement
-    void rotateImage(const std::string& artworkId, double angle);                     // implement
+    std::vector<Artwork> getArtworkGallery();
+    void sortArtworks(const std::string& criteria);
+    void resetImage(const std::string& artworkId);
+    Artwork getArtworkDescription(const std::string& artworkId);
+    Artwork applyFilterToImage(const std::string& artworkId);
+    void splitSubtitle(const std::string& work_subtitle);
+    void editImage(const std::string& artworkId);
+    void cropImage(const std::string& artworkId, int x, int y, int width, int height);
+    void rotateImage(const std::string& artworkId, double angle);
 };
 
-#endif
+#endif // PRADO_EDITOR_INTERFACE_H
