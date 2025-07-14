@@ -1,4 +1,4 @@
-#include <"artwork.h">
+#include "artwork.h"
 #include <opencv2/imgcodecs.hpp>  
 
 
@@ -77,16 +77,39 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
 }
 
 Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId) {
+    //Contributors : Taro
+    //Purpose : apply a filter to a selected image by the user
+    //Parameters: artworkID: a string that identifies a unique artpiece (str)
+    //Return Value: An edited artwork object
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
         std::cerr << "Error: artwork not found\n";
         return {};
     }
 
-    // Placeholder: you would apply a filter using OpenCV here
-    std::cout << "Applying filter to " << art->id << std::endl;
+    cv::Mat original = ImageCache::getCachedImage(artworkId);
+    if (original.empty()) {
+        std::cerr << "Error: image not found in cache\n";
+        return {};
+    }
+
+    // Apply grayscale + blur
+    cv::Mat gray, blurred;
+    cv::cvtColor(original, gray, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(gray, gray, cv::COLOR_GRAY2BGR); // convert back so dimensions match
+    cv::GaussianBlur(gray, blurred, cv::Size(5, 5), 0);
+
+    // Create a new filename
+    std::string new_filename = "filtered_" + artworkId + ".jpg";
+    cv::imwrite(new_filename, blurred);
+
+    // Update artwork
+    art->work_image_url = new_filename;
+    ImageCache::addImage(artworkId, blurred);  // Optionally update cache
+
     return *art;
 }
+
 
 void PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
     // Contributors : Sarah
