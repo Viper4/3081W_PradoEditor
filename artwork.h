@@ -30,21 +30,16 @@ struct Artwork {
 };
 
 // -------------------
-// Global Data Stores
-// -------------------
-inline std::unordered_map<std::string, Artwork> GlobalGallery;
-
-// -------------------
 // Interface Class
+// Contributors: Taro Welches
+// Purpose: Provide a layout for each artwork.cpp function to be implemented in artwork.cpp
+// Input/Output: None
 // -------------------
 class PradoEditorMobileInterface {
-private:
-    Artwork* findArtworkById(const std::string& artworkId);
-
 public:
     PradoEditorMobileInterface() = default;
 
-    std::vector<Artwork> getArtworkGallery();
+    cv::Mat getArtworkGallery();
     void sortArtworks(const std::string& criteria);
     void resetImage(const std::string& artworkId);
     Artwork getArtworkDescription(const std::string& artworkId);
