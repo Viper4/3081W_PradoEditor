@@ -109,3 +109,7 @@ void PradoEditorMobileInterface::rotateImage(const std::string& artworkId, doubl
     std::cout << "Rotating image for artwork ID: " << artworkId << " by " << angle << " degrees\n";
     // Placeholder
 }
+
+void cv::Mat getImage(const std::string& artworkId){
+    std::cout << "make some sort of call to getimagecache and then error handle\n";
+}
