@@ -8,6 +8,9 @@
 
 // -------------------
 // Artwork Data Struct
+// Contributors: Taro Welches
+// Purpose: provide attributes for each piece of artwork
+// Input/Output: None
 // -------------------
 struct Artwork {
     std::string id = "";
@@ -39,6 +42,9 @@ struct ImageCache {
 
 // -------------------
 // Interface Class
+// Contributors: Taro Welches
+// Purpose: Provide a layout for each artwork.cpp function to be implemented in artwork.cpp
+// Input/Output: None
 // -------------------
 class PradoEditorMobileInterface {
 private:
