@@ -53,6 +53,9 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
 }
 
 void PradoEditorMobileInterface::resetImage(const std::string& artworkId) {
+    //Contributors: Taro Welchse
+    //Input: artworkId
+    //Return: None
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
         std::cerr << "Error: artwork not found\n";
