@@ -77,7 +77,7 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
 }
 
 Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId) {
-    //Contributors : Taro & Huiwen
+    //Contributors : Taro & Huiwen (I think huiwen did it but I did it on accident feel free to change this)
     //Purpose : apply a filter to a selected image by the user
     //Parameters: artworkID: a string that identifies a unique artpiece (str)
     //Return Value: An edited artwork object
