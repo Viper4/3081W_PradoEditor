@@ -54,7 +54,8 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
 
 void PradoEditorMobileInterface::resetImage(const std::string& artworkId) {
     //Contributors: Taro Welchse
-    //Input: artworkId
+    //Input: const std::string&artworkId
+    //Purpose: To restore an edited image's values back to the original
     //Return: None
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
