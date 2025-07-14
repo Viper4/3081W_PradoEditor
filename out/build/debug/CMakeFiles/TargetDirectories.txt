@@ -1,8 +1,0 @@
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/3081W_PradoEditor.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/edit_cache.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/rebuild_cache.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/list_install_components.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/install.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/install/local.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/3081W_PradoEditor_autogen_timestamp_deps.dir
-C:/Users/vpr16/OneDrive/Desktop/FOM/3081W/PradoEditor/out/build/debug/CMakeFiles/3081W_PradoEditor_autogen.dir

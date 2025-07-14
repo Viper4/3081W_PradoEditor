@@ -89,3 +89,4 @@ CMakeLists.txt.user*
 
 # Visual Studio directory
 .vs/
+out/build/
