@@ -1,8 +1,5 @@
-
-
 #define PRADO_EDITOR_INTERFACE_H
 #include <string>
-#include <string.h>
 #include <vector>
 
 struct Artwork {
@@ -40,8 +37,6 @@ struct Artwork {
 
 class PradoEditorMobileInterface {
 public:
-
-
     Artwork:Artwork()
     {
         id = "";
@@ -54,7 +49,7 @@ public:
     std::vector<Artwork> searchArtworks(const std::string& query);
 
     void sortArtworks(const std::string& criteria){
-
+        
     }
 
     Artwork getArtworkDescription(const std::string& artworkId);
