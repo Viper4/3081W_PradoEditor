@@ -47,10 +47,6 @@ struct ImageCache {
 // Input/Output: None
 // -------------------
 class PradoEditorMobileInterface {
-private:
-    cv::Mat getCachedImage(const std::string& artworkId);
-    Artwork* findArtworkById(const std::string& artworkId);
-
 public:
     PradoEditorMobileInterface() = default;
 
