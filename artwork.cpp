@@ -1,14 +1,6 @@
 #include <"artwork.h">
 #include <opencv2/imgcodecs.hpp>  
 
-cv::Mat PradoEditorMobileInterface::getCachedImage(const std::string& artworkId) {
-    auto it = ImageCache::image_map.find(artworkId);
-    if (it == ImageCache::image_map.end()) {
-        return cv::Mat(); // empty matrix
-    }
-    return it->second;
-}
-
 Artwork* PradoEditorMobileInterface::findArtworkById(const std::string& artworkId) {
     auto it = GlobalGallery.find(artworkId);
     if (it == GlobalGallery.end()) {
