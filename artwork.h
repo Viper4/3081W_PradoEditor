@@ -31,14 +31,6 @@ struct Artwork {
     int original_y = 0;
 };
 
-// -------------------
-// Global Data Stores
-// -------------------
-inline std::unordered_map<std::string, Artwork> GlobalGallery;
-
-struct ImageCache {
-    static inline std::unordered_map<std::string, cv::Mat> image_map;
-};
 
 // -------------------
 // Interface Class
