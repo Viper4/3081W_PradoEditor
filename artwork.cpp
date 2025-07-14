@@ -76,10 +76,10 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
     return art->work_description;
 }
 
-Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId) {
+Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId, const std::string& filterType) {
     //Contributors : Taro & Huiwen (I think huiwen did it but I did it on accident feel free to change this)
     //Purpose : apply a filter to a selected image by the user
-    //Parameters: artworkID: a string that identifies a unique artpiece (str)
+    //Parameters: artworkID: a string that identifies a unique artpiece (str) and filterType: a string that identifies what filter to layer
     //Return Value: An edited artwork object
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
@@ -93,22 +93,50 @@ Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artwor
         return {};
     }
 
-    // Apply grayscale + blur
-    cv::Mat gray, blurred;
-    cv::cvtColor(original, gray, cv::COLOR_BGR2GRAY);
-    cv::cvtColor(gray, gray, cv::COLOR_GRAY2BGR); // convert back so dimensions match
-    cv::GaussianBlur(gray, blurred, cv::Size(5, 5), 0);
+    cv::Mat result;
+    //chatGpt helped on this part
+    if (filterType == "grayscale") {
+        cv::cvtColor(original, result, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(result, result, cv::COLOR_GRAY2BGR); // to keep channels consistent
+    }
+    else if (filterType == "blur") {
+        cv::GaussianBlur(original, result, cv::Size(7, 7), 1.5);
+    }
+    else if (filterType == "canny") {
+        cv::Mat edges;
+        cv::Canny(original, edges, 100, 200);
+        cv::cvtColor(edges, result, cv::COLOR_GRAY2BGR); // to keep output 3-channel
+    }
+    else if (filterType == "sepia") {
+        cv::transform(original, result, cv::Matx33f(
+            0.272, 0.534, 0.131,
+            0.349, 0.686, 0.168,
+            0.393, 0.769, 0.189));
+    }
+    else if (filterType == "invert") {
+        cv::bitwise_not(original, result);
+    }
+    else if (filterType == "sharpen") {
+        cv::Mat kernel = (cv::Mat_<float>(3,3) <<
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0);
+        cv::filter2D(original, result, original.depth(), kernel);
+    }
+    else {
+        std::cerr << "Unknown filter type: " << filterType << std::endl;
+        return *art;
+    }
 
-    // Create a new filename
-    std::string new_filename = "filtered_" + artworkId + ".jpg";
-    cv::imwrite(new_filename, blurred);
-
-    // Update artwork
+    // Save and update the image
+    std::string new_filename = "filtered_" + artworkId + "_" + filterType + ".jpg";
+    cv::imwrite(new_filename, result);
     art->work_image_url = new_filename;
-    ImageCache::addImage(artworkId, blurred);  // Optionally update cache
+    ImageCache::addImage(artworkId, result); // Update cache
 
     return *art;
 }
+
 
 
 void PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
