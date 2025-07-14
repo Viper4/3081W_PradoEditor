@@ -50,7 +50,7 @@ class PradoEditorMobileInterface {
 public:
     PradoEditorMobileInterface() = default;
 
-    std::vector<Artwork> getArtworkGallery();
+    cv::Mat getArtworkGallery();
     void sortArtworks(const std::string& criteria);
     void resetImage(const std::string& artworkId);
     Artwork getArtworkDescription(const std::string& artworkId);
