@@ -1,14 +1,6 @@
 #include <"artwork.h">
 #include <opencv2/imgcodecs.hpp>  
 
-Artwork* PradoEditorMobileInterface::findArtworkById(const std::string& artworkId) {
-    auto it = GlobalGallery.find(artworkId);
-    if (it == GlobalGallery.end()) {
-        return nullptr;
-    }
-    return &it->second;
-}
-
 
 std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery() {
     std::vector<Artwork> result;
@@ -19,6 +11,10 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery() {
 }
 
 void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
+    //Contributors: Taro Welches
+    //Input: string type criteria
+    //Purpose: To sort the displayed artwork by a certain criteria input by user
+    //return: none
     std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
 
     if (criteria == "Newest") {
