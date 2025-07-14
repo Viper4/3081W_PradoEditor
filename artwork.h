@@ -57,6 +57,7 @@ public:
     void editImage(const std::string& artworkId);
     void cropImage(const std::string& artworkId, int x, int y, int width, int height);
     void rotateImage(const std::string& artworkId, double angle);
+    void getImage(const std::string& artworkId);
 };
 
 #endif // PRADO_EDITOR_INTERFACE_H
