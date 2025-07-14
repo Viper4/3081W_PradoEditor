@@ -88,4 +88,4 @@ CMakeLists.txt.user*
 *.opendb
 
 # Visual Studio directory
-/.vs
+.vs/
