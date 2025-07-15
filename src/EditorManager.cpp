@@ -125,7 +125,7 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
     // FINISH: UPDATE IMAGE;
     return new_image;
 }
-}
+
 
 void EditorManager::resetImage(const std::string &artworkId)
 {
@@ -133,7 +133,7 @@ void EditorManager::resetImage(const std::string &artworkId)
     // Input: const std::string&artworkId
     // Purpose: To restore an edited image's values back to the original
     // Return: None
-    Artwork *art = findArtworkById(artworkId);
+    Artwork art = getArtworkByID(artworkId);
     if (!art)
     {
         std::cerr << "Error: artwork not found\n";
