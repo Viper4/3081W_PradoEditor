@@ -40,28 +40,6 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
     }
 }
 
-void PradoEditorMobileInterface::resetImage(const std::string& artworkId) {
-    //Contributors: Taro Welches
-    //Input: const std::string&artworkId
-    //Purpose: To restore an edited image's values back to the original
-    //Return: None
-    Artwork* art = findArtworkById(artworkId);
-    if (!art) {
-        std::cerr << "Error: artwork not found\n";
-        return;
-    }
-
-    cv::Mat original = getCachedImage(artworkId);
-    if (original.empty()) {
-        std::cerr << "Error: original image not found in cache\n";
-        return;
-    }
-
-    art->workImageUrl = "restored_" + artworkId + ".jpg";
-    cv::imwrite(art->workImageUrl, original);
-    art->x = art->originalX;
-    art->y = art->originalY;
-}
 
 Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& artworkId) {
     Artwork* art = findArtworkById(artworkId);
@@ -72,17 +50,6 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
     return *art;
 }
 
-Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId) {
-    Artwork* art = findArtworkById(artworkId);
-    if (!art) {
-        std::cerr << "Error: artwork not found\n";
-        return {};
-    }
-
-    // Placeholder: you would apply a filter using OpenCV here
-    std::cout << "Applying filter to " << art->id << std::endl;
-    return *art;
-}
 
 void PradoEditorMobileInterface::splitSubtitle(const std::string& workSubtitle) {
     std::cout << "Splitting subtitle: " << workSubtitle << std::endl;
@@ -98,11 +65,6 @@ void PradoEditorMobileInterface::cropImage(const std::string& artworkId, int x, 
     std::cout << "Cropping image for artwork ID: " << artworkId
               << " to region x=" << x << " y=" << y
               << " width=" << width << " height=" << height << std::endl;
-    // Placeholder
-}
-
-void PradoEditorMobileInterface::rotateImage(const std::string& artworkId, double angle) {
-    std::cout << "Rotating image for artwork ID: " << artworkId << " by " << angle << " degrees\n";
     // Placeholder
 }
 
