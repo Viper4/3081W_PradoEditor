@@ -10,11 +10,6 @@ class ArtworkManager {
 public:
     ArtworkManager() = default;
 
-    /**
-     * @brief Retrieve an artwork by ID from cache or disk.
-     * @param artworkId Unique identifier for the artwork.
-     * @return Artwork object.
-     */
     Artwork getArtworkByID(const std::string& artworkId);
 
     cv::Mat applyFilter(const cv::Mat& image, const std::map<std::string, int>& params);
