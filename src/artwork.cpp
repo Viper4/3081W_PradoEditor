@@ -48,31 +48,46 @@ std::string PradoEditorMobileInterface::getArtworkDescription(const std::string&
 }
 
 
-SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
-        // Contributors : Sarah and Taro and Lucas
-        // Purpose : split the given string subtitle description into a struct containing separate year, medium, and
-        // Parameters : work_subtitle: the original subtitle field in paragraph form
-        // Return Value: subtitle: a struct of the original subtitle field
-        SubtitleData subtitle;
-        size_t dotPos = work_subtitle.find('.');
+SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle) {
+    // Contributors: Sarah, Taro, and Lucas
+    // Purpose: Split the subtitle into year, medium, and dimensions
+    // Input: Full subtitle string (e.g., "1854. Óleo sobre lienzo, 60 x 50 cm")
+    // Output: SubtitleData with parsed year, medium, dimensions
 
-        for (size_t i = 0; i<dotPos; i++) {
-            if (isdigit(prefix[i]) && isdigit(prefix[i+1]) &&
-                isdigit(prefix[i+2]) && isdigit(prefix[i+3])) {
-                subtitle.year = prefix.substr(i, 4);
-                break;
-            }
+    SubtitleData subtitle;
+    size_t dotPos = work_subtitle.find('.');
+
+    // Find first 4-digit year before the first '.'
+    size_t yrPos = std::string::npos;
+    for (size_t i = 0; i + 3 < dotPos; i++) {
+        if (isdigit(work_subtitle[i]) && isdigit(work_subtitle[i + 1]) &&
+            isdigit(work_subtitle[i + 2]) && isdigit(work_subtitle[i + 3])) {
+            subtitle.year = work_subtitle.substr(i, 4);
+            yrPos = i;
+            break;
         }
+    }
 
-        size_t medPos = work_subtitle.find(',');
-        std::string medium = work_subtitle.substr(yrPos + 1, medPos - yrPos - 1);
-        subtitle.medium = std::string(trim(medium));
-
-        subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));
-
+    if (yrPos == std::string::npos) {
+        subtitle.year = "Unknown";
+        subtitle.medium = "Unknown";
+        subtitle.dimensions = "Unknown";
         return subtitle;
+    }
+
+    size_t medPos = work_subtitle.find(',', dotPos);  // Find comma *after* the period
+    if (medPos != std::string::npos) {
+        std::string medium = work_subtitle.substr(dotPos + 1, medPos - dotPos - 1);
+        subtitle.medium = trim(medium);
+        subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));
+    } else {
+        subtitle.medium = trim(work_subtitle.substr(dotPos + 1));
+        subtitle.dimensions = "Unknown";
+    }
+
+    return subtitle;
 }
 
-void cv::Mat getImage(const std::string& artworkId){
-    std::cout << "make some sort of call to getimagecache and then error handle\n";
-}
+
+
+
