@@ -16,6 +16,7 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery()
         result.push_back(artwork);
     }
     return result;*/
+    return GlobalGallery;
 }
 
 void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
@@ -24,38 +25,35 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
     // Input: const std::string& criteria
     // Purpose: To sort the displayed artwork by a certain criteria input by user
     // return: none
-    std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
 
     switch (criteria) {
     case Title:
-		std::sort(entries.begin(), entries.end(),
-			[](const auto& a, const auto& b)
-			{ return a.second.title < b.second.title; });
+        std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
+            [](const Artwork& a, const Artwork& b) {
+                return a.title < b.title;
+            });
         break;
     case Newest:
-        std::sort(entries.begin(), entries.end(),
-            [](const auto& a, const auto& b)
-            { return a.second.year > b.second.year; });
+        std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
+            [](const Artwork& a, const Artwork& b) {
+                return a.year > b.year;
+            });
         break;
     case Oldest:
-        std::sort(entries.begin(), entries.end(),
-            [](const auto& a, const auto& b)
-            { return a.second.year < b.second.year; });
+        std::sort(GlobalGallery.end(), GlobalGallery.begin(), 
+            [](const Artwork& a, const Artwork& b) {
+                return a.year < b.year;
+            });
         break;
     case Artist:
-        std::sort(entries.begin(), entries.end(),
-            [](const auto& a, const auto& b)
-            { return a.second.author < b.second.author; }); // alphabetical ig
+        std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
+            [](const Artwork& a, const Artwork& b) {
+                return a.author > b.author;
+            });
         break;
 	default:
         std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
         break;
-    }
-
-    GlobalGallery.clear();
-    for (const auto &[id, artwork] : entries)
-    {
-        GlobalGallery.push_back(artwork);
     }
 }
 
@@ -80,7 +78,7 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
 		subtitle.dimensions = matches[3];
     }
     else {
-        std::cerr << "No match found.\n";
+        std::cerr << "No match found for subtitle: " << work_subtitle << std::endl;
     }
 
     /*size_t dotPos = work_subtitle.find('.');
@@ -106,6 +104,6 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
 
 cv::Mat getImage(const std::string &artworkId)
 {
-
     std::cout << "make some sort of call to getimagecache and then error handle\n";
+    return cv::Mat();
 }

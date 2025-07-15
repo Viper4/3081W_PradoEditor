@@ -34,7 +34,7 @@ static void initializeConsole() {
 #endif
 }
 
-int main(int argc, char *argv[])
+int main_old(int argc, char *argv[])
 {
     //Tasks for Main
     // The data will be cleaned, with only paintings that have the attribute of year

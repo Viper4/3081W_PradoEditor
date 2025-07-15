@@ -63,28 +63,30 @@ int main(int argc, char* argv[])
 {
     initializeConsole();
 
-    std::ifstream file("smallerpaintings.csv");
+    // ------------------- LOAD CSV FILE -------------------
+    std::ifstream file("images/clean_smallerpaintings.csv");
     std::string line;
     std::getline(file, line); // Skip header
 
     PradoEditorMobileInterface pradoInterface;
     ArtworkManager artworkManager;
-    EditorManager editorManager;
 
     int idcount = 0;
 
     while (std::getline(file, line))
     {
-        std::stringstream ss(line);
+        std::stringstream stream(line);
         Artwork art;
         SubtitleData subtitle;
 
-        std::getline(ss, art.image_url, ',');
-        std::getline(ss, art.author, ',');
-        std::getline(ss, art.title, ',');
-        std::getline(ss, art.subtitle, ',');
-        std::getline(ss, art.description, ',');
-        std::getline(ss, art.id, ','); // Use catalog ID
+        std::cout << "LINE: " << line << std::endl;
+
+        std::getline(stream, art.image_url, ',');
+        std::getline(stream, art.author, ',');
+        std::getline(stream, art.title, ',');
+        std::getline(stream, art.subtitle, ',');
+        std::getline(stream, art.description, ',');
+        std::getline(stream, art.id, ','); // Use catalog ID
 
         subtitle = pradoInterface.splitSubtitle(art.subtitle);
         art.year = subtitle.year;

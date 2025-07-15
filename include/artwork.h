@@ -47,6 +47,8 @@ enum SortCriteria {
 
 class PradoEditorMobileInterface
 {
+private:
+
 public:
     std::vector<Artwork> getArtworkGallery();
     void sortArtworks(const SortCriteria &criteria);
