@@ -11,7 +11,7 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery() {
 }
 
 void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
-    //Contributors: Taro Welches
+    //Contributors: Taro Welches and Lucas Giebler
     //Input: const std::string& criteria
     //Purpose: To sort the displayed artwork by a certain criteria input by user
     //return: none
@@ -49,7 +49,7 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
 
 
 SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
-        // Contributors : Sarah and Taro
+        // Contributors : Sarah and Taro and Lucas
         // Purpose : split the given string subtitle description into a struct containing separate year, medium, and
         // Parameters : work_subtitle: the original subtitle field in paragraph form
         // Return Value: subtitle: a struct of the original subtitle field
