@@ -5,6 +5,9 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include "artwork.h"
+#include <opencv2/core/types.hpp>      // for cv::Point2f and cv::RotatedRect
+#include <opencv2/imgproc.hpp>         // for getRotationMatrix2D, warpAffine
+
 
 Artwork ArtworkManager::getArtworkByID(const std::string &artworkId)
 {
@@ -84,7 +87,12 @@ Artwork ArtworkManager::editImage(const std::string &artworkId, const std::map<s
     // Return: Artwork object with the edited image
 
     Artwork original = getArtworkByID(artworkId);
-    cv::Mat image = original.getImage();
+
+    cv::Mat image = cv::imread("images/" + artworkId + ".jpg");
+    if (image.empty()) {
+    throw std::runtime_error("Failed to load image for: " + artworkId);
+    }
+
 
     if (params.count("width") && params.count("height"))
     {
@@ -95,7 +103,10 @@ Artwork ArtworkManager::editImage(const std::string &artworkId, const std::map<s
         image = applyFilter(image, params);
     }
 
-    return Artwork(artworkId, image);
+    Artwork edited = original;
+    edited.image = image; 
+    return edited;
+
 }
 
 cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
@@ -106,7 +117,11 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
     // artworkID: a string that identifies a unique artpiece (str)
     // angle: the angle in degrees to rotate the image by (double)
     // Return Value: new_image: the newly rotated version of the image (Matrix)
-    cv::Mat src = getImage(artworkId);
+    cv::Mat src = cv::imread("images/" + artworkId + ".jpg");
+    if (src.empty()) {
+    throw std::runtime_error("Failed to load image for: " + artworkId);
+    }
+
     cv::Point2f center(src.cols / 2.0F, src.rows / 2.0F);
     // conver the angle to radians
     angle = angle * CV_PI / 180.0;
