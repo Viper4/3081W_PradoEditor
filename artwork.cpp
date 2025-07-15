@@ -15,6 +15,8 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
     //Input: const std::string& criteria
     //Purpose: To sort the displayed artwork by a certain criteria input by user
     //return: none
+
+    //I assume the GlobalGallery is just the entire ~5404 structs.
     std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
 
     if (criteria == "Newest") {
@@ -26,14 +28,10 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
     } else if (criteria == "Artist") {
         std::sort(entries.begin(), entries.end(),
                   [](const auto& a, const auto& b) { return a.second.author < b.second.author; });
-    } else if (criteria == "Style") {
-        std::sort(entries.begin(), entries.end(),
-                  [](const auto& a, const auto& b) { return a.second.workSubtitle < b.second.workSubtitle; });
     } else {
         std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
         return;
     }
-
     GlobalGallery.clear();
     for (const auto& [id, artwork] : entries) {
         GlobalGallery[id] = artwork;
