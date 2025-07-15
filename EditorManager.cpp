@@ -117,3 +117,26 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
         return new_image;
     }
 }
+
+void EditorManager::resetImage(const std::string& artworkId) {
+    //Contributors: Taro Welches
+    //Input: const std::string&artworkId
+    //Purpose: To restore an edited image's values back to the original
+    //Return: None
+    Artwork* art = findArtworkById(artworkId);
+    if (!art) {
+        std::cerr << "Error: artwork not found\n";
+        return;
+    }
+
+    cv::Mat original = getCachedImage(artworkId);
+    if (original.empty()) {
+        std::cerr << "Error: original image not found in cache\n";
+        return;
+    }
+
+    art->workImageUrl = "restored_" + artworkId + ".jpg";
+    cv::imwrite(art->workImageUrl, original);
+    art->x = art->originalX;
+    art->y = art->originalY;
+}
