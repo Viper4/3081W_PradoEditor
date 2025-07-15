@@ -44,13 +44,13 @@ public:
 
     cv::Mat getArtworkGallery();
     void sortArtworks(const std::string& criteria);
-    void resetImage(const std::string& artworkId);
+    //void resetImage(const std::string& artworkId); Moved to EditorManager.cpp
     Artwork getArtworkDescription(const std::string& artworkId);
-    Artwork applyFilterToImage(const std::string& artworkId);
+    //Artwork applyFilterToImage(const std::string& artworkId); Moved to EditorManager.cpp
     void splitSubtitle(const std::string& work_subtitle);
-    void editImage(const std::string& artworkId);
-    void cropImage(const std::string& artworkId, int x, int y, int width, int height);
-    void rotateImage(const std::string& artworkId, double angle);
+    //void editImage(const std::string& artworkId); Moved to EditorManager.cpp
+    //void cropImage(const std::string& artworkId, int x, int y, int width, int height); Moved to EditorManager.cpp
+    //void rotateImage(const std::string& artworkId, double angle); Moved to EditorManager.cpp
     cv::Mat getImage(const std::string& artworkId);
 };
 
