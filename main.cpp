@@ -1,4 +1,4 @@
-#include "PradoEditor.h"
+#include "prado_editor.h"
 #include <QtWidgets/QApplication>
 #include <image_cache.h>
 
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     PradoEditor window;
-    ImageCache::max_images = 3;
+    ImageCache::maxImages = 3;
     ImageCache::addImage("1", cv::Mat(100, 100, CV_8UC3));
     ImageCache::addImage("2", cv::Mat(100, 100, CV_8UC3));
     ImageCache::addImage("3", cv::Mat(100, 100, CV_8UC3));

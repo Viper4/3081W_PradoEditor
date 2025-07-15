@@ -10,20 +10,20 @@
 class ImageScrollGallery {
 private:
 	QListView* listView;
-	float pos_x;
-	float pos_y;
+	float posX;
+	float posY;
 	float width;
 	float height;
-	float buffer_x;
-	float buffer_y;
-	int num_total_images;
-	int images_per_row;
-	int num_rows;
+	float bufferX;
+	float bufferY;
+	int numTotalImages;
+	int imagesPerRow;
+	int numRows;
 
-	void loadImagesInView(int first_index, int last_index);
+	void loadImagesInView(int firstIndex, int lastIndex);
 
 public:
-	ImageScrollGallery(float x, float y, float width, float height, float buffer_x, float buffer_y, int images_per_row);
+	ImageScrollGallery(float x, float y, float width, float height, float bufferX, float bufferY, int imagesPerRow);
 	void onScroll();
 };
 
