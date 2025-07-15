@@ -1,61 +1,80 @@
 #include <image_scroll_gallery.h>
+#include <iostream>
+#include <QScrollBar>
+#include <QObject>
+#include <QListView>
+#include <QStandardItemModel>
+#include <QStringListModel>
 
-class ImageScrollGallery {
-private:
-	Qt::QListView* list_view = nullptr;
-	float pos_x = 0;
-	float pos_y = 0;
-	float width = 0;
-	float height = 0;
-	float buffer_x = 0;
-	float buffer_y = 0;
-	int num_total_images = 0;
-	int images_per_row = 0;
-	int num_rows = 0;
+ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int imagesPerRow) {
+	// Contributors: Lucas Giebler
+	// Purpose: Constructor for ImageScrollGallery
+	// Parameters: float x
+	//             float y
+	//             float width
+	//			   float height
+	//             float bufferX
+	//             float bufferY
+	//             int imagesPerRow
+	// Return Value: ImageScrollGallery
 
-	void loadImagesInView(int first_index, int last_index) {
-		// Contributors: Lucas Giebler
-		// Purpose: Loads images into the scroll view
-		// Parameters: int first_index
-		//             int last_index
-		// Return Value: void
+	this->listView = new QListView(parent);
+	this->listView->setGeometry(x + bufferX, y + bufferY, width, height);
+	this->listView->setViewMode(QListView::IconMode);
+	this->listView->setIconSize(QSize(150, 150));
+	this->listView->setMovement(QListView::Static);
+	this->listView->setFlow(QListView::LeftToRight);
+	QScrollBar* scrollBar = this->listView->verticalScrollBar();
+	connect(listView->verticalScrollBar(), &QScrollBar::valueChanged, this, &ImageScrollGallery::onScroll);
 
-		for (int i = first_index; i < last_index; i++) {
-			string artworkId = std::to_string(i);
-
-		}
+	QStandardItemModel* model = new QStandardItemModel(this);
+	this->listView->setModel(model);
+	QPixmap pixmap("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
+	for (int i = 0; i < 10; i++) {
+		QStandardItem* item = new QStandardItem(QIcon(pixmap), "Photo " + QString::number(i));
+		model->appendRow(item);
 	}
 
-public:
-	ImageScrollGallery(float x, float y, float width, float height, float buffer_x, float buffer_y, int images_per_row) {
-		// Contributors: Lucas Giebler
-		// Purpose: Constructor for ImageScrollGallery
-		// Parameters: float x
-		//             float y
-		//             float width
-		//			   float height
-		//             float buffer_x
-		//             float buffer_y
-		//             int images_per_row
-		// Return Value: ImageScrollGallery
+	/*QStringListModel* model = new QStringListModel(this);
+	this->listView->setModel(model);
+	QStringList items;
+	items << "Image 1" << "Image 2" << "Image 3" << "Image 4" << "Image 5" << "Image 6" << "Image 7" << "Image 8" << "Image 9" << "Image 10";
+	model->setStringList(items);*/
 
-		this->list_view = new Qt::QListView(); // Figure this out
-		this->pos_x = x;
-		this->pos_y = y;
-		this->width = width;
-		this->height = height;
-		this->buffer_x = buffer_x;
-		this->buffer_y = buffer_y;
-		this->images_per_row = images_per_row;
+	this->posX = x;
+	this->posY = y;
+	this->width = width;
+	this->height = height;
+	this->bufferX = bufferX;
+	this->bufferY = bufferY;
+	this->imagesPerRow = imagesPerRow;
+	this->numRows = 0;
+	this->numTotalImages = 0;
+}
+
+void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
+	// Contributors: Lucas Giebler
+	// Purpose: Loads images into the scroll view
+	// Parameters: int firstIndex
+	//             int lastIndex
+	// Return Value: void
+
+	for (int i = firstIndex; i < lastIndex; i++) {
+		std::string artworkId = std::to_string(i);
+
 	}
+}
 
-	void onScroll() {
-		// Contributors: Lucas Giebler
-		// Purpose: Runs every time the scroll view is scrolled and updates the images in the view
-		// Parameters: 
-		// Return Value: void
+void ImageScrollGallery::onScroll(int value) {
+	// Contributors: Lucas Giebler
+	// Purpose: Runs every time the scroll view is scrolled and updates the images in the view
+	// Parameters: 
+	// Return Value: void
 
-		int first_index = list_view.indexAt(pos_x+buffer_x, pos_y+buffer_y);
-		int last_index = list_view.indexAt(pos_x + width - buffer_x, pos_y + height - buffer_y);
-	}
-};
+	std::cout << "Detected scroll" << std::endl;
+
+	QPoint topLeft = listView->viewport()->mapToGlobal(listView->viewport()->rect().topLeft());
+	QPoint bottomRight = listView->viewport()->mapToGlobal(listView->viewport()->rect().bottomRight());
+	int firstIndex = listView->indexAt(topLeft).row() + 1;
+	int lastIndex = listView->indexAt(bottomRight).row() + 1;
+}

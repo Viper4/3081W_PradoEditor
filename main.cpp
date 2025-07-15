@@ -1,6 +1,7 @@
-#include "PradoEditor.h"
+#include "prado_editor.h"
 #include <QtWidgets/QApplication>
 #include <image_cache.h>
+#include <image_scroll_gallery.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -29,7 +30,8 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     PradoEditor window;
-    ImageCache::max_images = 3;
+    ImageScrollGallery gallery = ImageScrollGallery(&window, 0, 0, 100, 100, 0, 0, 3);
+    ImageCache::maxImages = 3;
     ImageCache::addImage("1", cv::Mat(100, 100, CV_8UC3));
     ImageCache::addImage("2", cv::Mat(100, 100, CV_8UC3));
     ImageCache::addImage("3", cv::Mat(100, 100, CV_8UC3));

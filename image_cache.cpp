@@ -2,13 +2,13 @@
 #include <opencv2/imgcodecs.hpp>
 #include <iostream>
 
-int ImageCache::max_images = 50;
-std::list<std::string> ImageCache::usage_list; // Most recently used id will be at the front of the list
-std::unordered_map<std::string, cv::Mat> ImageCache::image_map; // Mat is OpenCV's matrix object to represent an image
+int ImageCache::maxImages = 50;
+std::list<std::string> ImageCache::usageList; // Most recently used id will be at the front of the list
+std::unordered_map<std::string, cv::Mat> ImageCache::imageMap; // Mat is OpenCV's matrix object to represent an image
 
 void ImageCache::printUsageList() {
     std::cout << "Usage list: ";
-    for (const auto& id : ImageCache::usage_list) {
+    for (const auto& id : ImageCache::usageList) {
         std::cout << id << " ";
     }
     std::cout << std::endl;
@@ -23,11 +23,8 @@ void ImageCache::updateUsage(const std::string& artworkId) {
     std::cout << "Updating usage of " << artworkId << std::endl;
     ImageCache::printUsageList();
 
-    ImageCache::usage_list.remove(artworkId);
-    if (ImageCache::image_map.find(artworkId) == ImageCache::image_map.end()) {
-        
-    }
-    ImageCache::usage_list.push_front(artworkId);
+    ImageCache::usageList.remove(artworkId);
+    ImageCache::usageList.push_front(artworkId);
 
     ImageCache::printUsageList();
 }
@@ -41,10 +38,10 @@ void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
 
     std::cout << "Add image " << artworkId << " with image size " << image.size << std::endl;
 
-    if (ImageCache::image_map.size() >= ImageCache::max_images && ImageCache::image_map.find(artworkId) != ImageCache::image_map.end()) {
-        ImageCache::usage_list.pop_back();
+    if (ImageCache::imageMap.size() >= ImageCache::maxImages && ImageCache::imageMap.find(artworkId) != ImageCache::imageMap.end()) {
+        ImageCache::usageList.pop_back();
     }
-    ImageCache::image_map[artworkId] = image;
+    ImageCache::imageMap[artworkId] = image;
     ImageCache::updateUsage(artworkId);
 }
 
@@ -56,8 +53,8 @@ cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
 
 	std::cout << "Get image " << artworkId << std::endl;
 
-    if (ImageCache::image_map.find(artworkId) == ImageCache::image_map.end()) {
+    if (ImageCache::imageMap.find(artworkId) == ImageCache::imageMap.end()) {
         return cv::Mat();
     }
-    return ImageCache::image_map[artworkId];
+    return ImageCache::imageMap[artworkId];
 }
