@@ -1,3 +1,6 @@
+//Contributors: Taro Welches
+//Purpose: Just a file to test our code without messing with main
+
 #include <iostream>
 #include <cassert>
 #include "artwork.h"
