@@ -1,4 +1,4 @@
-#include <"artwork.h">
+#include "artwork.h"
 #include <opencv2/imgcodecs.hpp>  
 
 
@@ -64,29 +64,99 @@ void PradoEditorMobileInterface::resetImage(const std::string& artworkId) {
 }
 
 Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& artworkId) {
+    // Contributors : Sarah
+    // Purpose : retrieve an artwork description
+    // Parameters : artworkID: a string that identifies a unique artpiece (str)
+    // Return Value: either the artwork description or its availability status (str)
+    Artwork art = findArtworkById(artworkId);
+    if (!art || art->work_description.empty())
+    {
+        return "Description not available.";
+    }
+    return art->work_description;
+}
+
+Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId, const std::string& filterType) {
+    //Contributors : Taro & Huiwen (I think huiwen did it but I did it on accident feel free to change this)
+    //Purpose : apply a filter to a selected image by the user
+    //Parameters: artworkID: a string that identifies a unique artpiece (str) and filterType: a string that identifies what filter to layer
+    //Return Value: An edited artwork object
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
         std::cerr << "Error: artwork not found\n";
         return {};
     }
-    return *art;
-}
 
-Artwork PradoEditorMobileInterface::applyFilterToImage(const std::string& artworkId) {
-    Artwork* art = findArtworkById(artworkId);
-    if (!art) {
-        std::cerr << "Error: artwork not found\n";
+    cv::Mat original = ImageCache::getCachedImage(artworkId);
+    if (original.empty()) {
+        std::cerr << "Error: image not found in cache\n";
         return {};
     }
 
-    // Placeholder: you would apply a filter using OpenCV here
-    std::cout << "Applying filter to " << art->id << std::endl;
+    cv::Mat result;
+    //chatGpt helped on this part
+    if (filterType == "grayscale") {
+        cv::cvtColor(original, result, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(result, result, cv::COLOR_GRAY2BGR); // to keep channels consistent
+    }
+    else if (filterType == "blur") {
+        cv::GaussianBlur(original, result, cv::Size(7, 7), 1.5);
+    }
+    else if (filterType == "canny") {
+        cv::Mat edges;
+        cv::Canny(original, edges, 100, 200);
+        cv::cvtColor(edges, result, cv::COLOR_GRAY2BGR); // to keep output 3-channel
+    }
+    else if (filterType == "sepia") {
+        cv::transform(original, result, cv::Matx33f(
+            0.272, 0.534, 0.131,
+            0.349, 0.686, 0.168,
+            0.393, 0.769, 0.189));
+    }
+    else if (filterType == "invert") {
+        cv::bitwise_not(original, result);
+    }
+    else if (filterType == "sharpen") {
+        cv::Mat kernel = (cv::Mat_<float>(3,3) <<
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0);
+        cv::filter2D(original, result, original.depth(), kernel);
+    }
+    else {
+        std::cerr << "Unknown filter type: " << filterType << std::endl;
+        return *art;
+    }
+
+    // Save and update the image
+    std::string new_filename = "filtered_" + artworkId + "_" + filterType + ".jpg";
+    cv::imwrite(new_filename, result);
+    art->work_image_url = new_filename;
+    ImageCache::addImage(artworkId, result); // Update cache
+
     return *art;
 }
 
-void PradoEditorMobileInterface::splitSubtitle(const std::string& work_subtitle) {
-    std::cout << "Splitting subtitle: " << work_subtitle << std::endl;
-    // Placeholder
+
+
+void PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
+    // Contributors : Sarah
+    // Purpose : split the given string subtitle description into a struct containing separate year, medium, and
+    // Parameters : work_subtitle: the original subtitle field in paragraph form
+    // Return Value: subtitle: a struct of the original subtitle field
+    SubtitleData subtitle;
+
+    size_t yrPos = work_subtitle.find('.');
+    std::string year = work_subtitle.substr(0, yrPos);
+    subtitle.year = std::string(trim(year));
+
+    size_t medPos = work_subtitle.find(',');
+    std::string medium = work_subtitle.substr(yrPos + 1, medPos - yrPos - 1);
+    subtitle.medium = std::string(trim(medium));
+
+    subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));
+
+    return subtitle;
 }
 
 void PradoEditorMobileInterface::editImage(const std::string& artworkId) {
@@ -101,9 +171,34 @@ void PradoEditorMobileInterface::cropImage(const std::string& artworkId, int x, 
     // Placeholder
 }
 
-void PradoEditorMobileInterface::rotateImage(const std::string& artworkId, double angle) {
-    std::cout << "Rotating image for artwork ID: " << artworkId << " by " << angle << " degrees\n";
-    // Placeholder
+void PradoEditorMobileInterface::rotateImage(const std::string &artworkId, double angle){
+    // Contributors : Sarah
+    // Purpose : rotate the image clockwise by the requested angle
+    // Parameters :
+    // artworkID: a string that identifies a unique artpiece (str)
+    // angle: the angle in degrees to rotate the image by (double)
+    // Return Value: new_image: the newly rotated version of the image (Matrix)
+    Mat src = getImage(artworkId);
+    Point2f center(src.cols / 2.0F, src.rows / 2.0F);
+    // conver the angle to radians
+    angle = angle * CV_PI / 180.0;
+
+    // get the rotation matrix
+    Mat rot = getRotationMatrix2D(center, angle, 1.0);
+
+    // bounding box to prevent cropping
+    Rect2f bound_box = RotatedRect(Point2f(), src.size(), angle).boundingRect2f();
+
+    // adjust the transformation matrix based on bounds
+    rot.at<double>(0, 2) += bound_box.width / 2.0 - src.cols / 2.0;
+    rot.at<double>(1, 2) += bound_box.height / 2.0 - src.rows / 2.0;
+
+    // rotate and save the new image
+    Mat new_image;
+    warpAffine(src, new_image, rot, bound_box.size());
+
+    // FINISH: UPDATE IMAGE;
+    return new_image;
 }
 
 void cv::Mat getImage(const std::string& artworkId){
