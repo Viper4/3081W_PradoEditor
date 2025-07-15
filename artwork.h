@@ -6,17 +6,12 @@
 #include <vector>
 
 struct Artwork {
-    std::string id; //I don't know if they have IDs tbh. If not, we could assign some IDs based off of hashes of the attributes.
     std::string work_title;
     std::string work_image_url;
     std::string author;
-    std::string author_bio;
-    std::string author_id;
-    std::string author_url;
     std::string work_subtitle;
     std::string year;
     std::string work_description;
-    std::string work_exposed;
     int x;
     int y;
 };
