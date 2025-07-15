@@ -5,7 +5,6 @@
 #include <iostream>
 
 std::vector<Artwork> GlobalGallery;
-//This GlobalGallery is our main page's structs
 
 int main() {
     std::ifstream file("smallerpaintings.csv");
@@ -13,7 +12,7 @@ int main() {
     std::getline(file, line); // Skip header
 
     PradoEditorMobileInterface interface;
-
+    int idcount = 0;
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string cell;
@@ -21,6 +20,7 @@ int main() {
         Artwork art;
         SubtitleData subtitle;
 
+        art.id = idcount;
         std::getline(ss, art.work_image_url, ',');
         std::getline(ss, art.author, ',');
         std::getline(ss, art.work_title, ',');
