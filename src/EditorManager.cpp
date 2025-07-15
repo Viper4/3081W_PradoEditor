@@ -4,25 +4,28 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include "artwork.h"
 
 Artwork ArtworkManager::getArtworkByID(const std::string &artworkId)
 {
     // Contributors: Huiwen Jia
-    // Input: const std::string& artworkId
-    // Purpose: To retrieve the artwork from cache or disk based on ID
-    // Return: Artwork object containing the image and ID
-    cv::Mat img = imageCache.getCachedImage(artworkId);
-    if (img.empty())
-    {
-        img = cv::imread("images/" + artworkId + ".jpg");
-        if (img.empty())
-        {
-            throw std::runtime_error("Image not found for artwork ID: " + artworkId);
+    // Loop over GlobalGallery to find the artwork by ID
+    for (const auto& art : GlobalGallery) {
+        if (art.id == artworkId) {
+            // Try to load the image from disk
+            cv::Mat img = cv::imread("images/" + artworkId + ".jpg");
+            if (img.empty()) {
+                throw std::runtime_error("Image file not found for artwork ID: " + artworkId);
+            }
+
+            // Construct and return artwork object with image
+            Artwork result = art;
+            result.image = img;  // Assuming you added cv::Mat image; field in Artwork
+            return result;
         }
-        imageCache.addImage(artworkId, img);
     }
-    imageCache.updateUsage(artworkId);
-    return Artwork(artworkId, img);
+
+    throw std::runtime_error("Artwork ID not found: " + artworkId);
 }
 
 cv::Mat ArtworkManager::applyFilter(const cv::Mat &image, const std::map<std::string, int> &params)
@@ -129,26 +132,26 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
 
 void EditorManager::resetImage(const std::string &artworkId)
 {
-    // Contributors: Taro Welches and Sarah
-    // Input: const std::string&artworkId
-    // Purpose: To restore an edited image's values back to the original
-    // Return: None
-    Artwork art = getArtworkByID(artworkId);
-    if (!art)
-    {
-        std::cerr << "Error: artwork not found\n";
-        return;
-    }
+    try {
+        // Get the artwork metadata
+        Artwork art = getArtworkByID(artworkId);
 
-    cv::Mat original = getCachedImage(artworkId);
-    if (original.empty())
-    {
-        std::cerr << "Error: original image not found in cache\n";
-        return;
-    }
+        // Load original image from disk (e.g., art001_original.jpg)
+        cv::Mat original = cv::imread("images/" + artworkId + "_original.jpg");
+        if (original.empty()) {
+            std::cerr << "Error: original image file not found for artwork ID: " << artworkId << "\n";
+            return;
+        }
 
-    art->workImageUrl = "restored_" + artworkId + ".jpg";
-    cv::imwrite(art->workImageUrl, original);
-    art->x = art->originalX;
-    art->y = art->originalY;
+        // Save restored image to a new file
+        std::string outputPath = "images/restored_" + artworkId + ".jpg";
+        if (!cv::imwrite(outputPath, original)) {
+            std::cerr << "Error: failed to write restored image to disk.\n";
+        } else {
+            std::cout << "Restored image saved to: " << outputPath << "\n";
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in resetImage: " << e.what() << "\n";
+    }
 }
