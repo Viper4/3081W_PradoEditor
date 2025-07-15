@@ -51,14 +51,24 @@ Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& art
 }
 
 
-void PradoEditorMobileInterface::splitSubtitle(const std::string& workSubtitle) {
-    std::cout << "Splitting subtitle: " << workSubtitle << std::endl;
-    // Placeholder
-}
+SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle){
+        // Contributors : Sarah
+        // Purpose : split the given string subtitle description into a struct containing separate year, medium, and
+        // Parameters : work_subtitle: the original subtitle field in paragraph form
+        // Return Value: subtitle: a struct of the original subtitle field
+        SubtitleData subtitle;
 
-void PradoEditorMobileInterface::editImage(const std::string& artworkId) {
-    std::cout << "Editing image for artwork ID: " << artworkId << std::endl;
-    // Placeholder
+        size_t yrPos = work_subtitle.find('.');
+        std::string year = work_subtitle.substr(0, yrPos);
+        subtitle.year = std::string(trim(year));
+
+        size_t medPos = work_subtitle.find(',');
+        std::string medium = work_subtitle.substr(yrPos + 1, medPos - yrPos - 1);
+        subtitle.medium = std::string(trim(medium));
+
+        subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));
+
+        return subtitle;
 }
 
 void PradoEditorMobileInterface::cropImage(const std::string& artworkId, int x, int y, int width, int height) {
