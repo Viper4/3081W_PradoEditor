@@ -38,13 +38,13 @@ void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
 }
 
 
-Artwork PradoEditorMobileInterface::getArtworkDescription(const std::string& artworkId) {
+std::string PradoEditorMobileInterface::getArtworkDescription(const std::string& artworkId) {
     Artwork* art = findArtworkById(artworkId);
     if (!art) {
         std::cerr << "Error: artwork not found\n";
-        return {};
+        return "Description not available";
     }
-    return *art;
+    return art->work_description;
 }
 
 
