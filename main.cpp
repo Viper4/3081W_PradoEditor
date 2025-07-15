@@ -1,11 +1,10 @@
-#include "mainwindow.h"
-
-#include <QApplication>
+#include "PradoEditor.h"
+#include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+    PradoEditor window;
+    window.show();
+    return app.exec();
 }
