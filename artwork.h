@@ -53,7 +53,7 @@ public:
     //void resetImage(const std::string& artworkId); Moved to EditorManager.cpp
     Artwork getArtworkDescription(const std::string& artworkId);
     //Artwork applyFilterToImage(const std::string& artworkId); Moved to EditorManager.cpp
-    void splitSubtitle(const std::string& workSubtitle);
+    SubtitleData splitSubtitle(const std::string& workSubtitle);
     //void editImage(const std::string& artworkId); Moved to EditorManager.cpp
     //void cropImage(const std::string& artworkId, int x, int y, int width, int height); Moved to EditorManager.cpp
     //void rotateImage(const std::string& artworkId, double angle); Moved to EditorManager.cpp
