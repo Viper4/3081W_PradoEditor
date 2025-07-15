@@ -4,10 +4,11 @@
 #include <list>
 #include <string>
 #include <unordered_map>
-
-using namespace cv;
+#include <opencv2/core.hpp>  
 
 class ImageCache {
+private:
+	static void printUsageList();
 public:
     static int max_images;
     static std::list<std::string> usage_list; // Most recently used id will be at the front of the list

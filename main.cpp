@@ -1,6 +1,21 @@
-#include "mainwindow.h"
+#include "PradoEditor.h"
+#include <QtWidgets/QApplication>
+#include <image_cache.h>
 
-#include <QApplication>
+#ifdef _WIN32
+#include <windows.h>
+#include <iostream>
+#endif
+
+static void initializeConsole() {
+#ifdef _WIN32
+    AllocConsole();                   // Allocate a new console window
+    FILE* fpOut;
+    freopen_s(&fpOut, "CONOUT$", "w", stdout);  // Redirect stdout to console
+    freopen_s(&fpOut, "CONOUT$", "w", stderr);  // Redirect stderr to console
+    std::cout << "Custom console initialized" << std::endl;
+#endif
+}
 
 int main(int argc, char *argv[])
 {
@@ -10,8 +25,21 @@ int main(int argc, char *argv[])
     //2. Obtain the jpg or png file from these structs and display them
     //3. Update the image cache based on the index of scroll and continue to display new paintings as the user scrolls
     //4. On event of a click of an image display the options such as edit, reset, or display description
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return a.exec();
+    initializeConsole();
+
+    QApplication app(argc, argv);
+    PradoEditor window;
+    ImageCache::max_images = 3;
+    ImageCache::addImage("1", cv::Mat(100, 100, CV_8UC3));
+    ImageCache::addImage("2", cv::Mat(100, 100, CV_8UC3));
+    ImageCache::addImage("3", cv::Mat(100, 100, CV_8UC3));
+
+    ImageCache::updateUsage("1");
+
+    ImageCache::addImage("4", cv::Mat(100, 100, CV_8UC3));
+
+    ImageCache::getCachedImage("2");
+
+    window.show();
+    return app.exec();
 }

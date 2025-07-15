@@ -90,3 +90,8 @@ CMakeLists.txt.user*
 # Visual Studio directory
 .vs/
 out/build/
+
+# Random shit
+# -----------
+x64/
+*.vcxproj0
