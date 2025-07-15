@@ -81,6 +81,13 @@ int main(int argc, char* argv[])
 
         std::cout << "LINE: " << line << std::endl;
 
+        // Headers are:
+        // work_url,work_image_url,author,author_bio,author_url,author_id,work_title,work_subtitle,work_exposed,work_description,
+        // work_tags,technical_sheet_numero_de_catalogo,technical_sheet_autor,technical_sheet_titulo,technical_sheet_fecha,technical_sheet_tecnica,
+        // technical_sheet_soporte,technical_sheet_dimension,technical_sheet_serie,technical_sheet_procedencia,bibliography,inventory,expositions,
+        // ubication,technical_sheet_autores,technical_sheet_edicion_/_estado,technical_sheet_materia,technical_sheet_ceca,technical_sheet_autora,
+        // technical_sheet_lugar_de_produccion
+
         std::getline(stream, art.image_url, ',');
         std::getline(stream, art.author, ',');
         std::getline(stream, art.title, ',');
@@ -88,10 +95,29 @@ int main(int argc, char* argv[])
         std::getline(stream, art.description, ',');
         std::getline(stream, art.id, ','); // Use catalog ID
 
+        // Replacing weird characters because of our python CSV cleaner
+        // Replace | with ,
+        std::replace(art.image_url.begin(), art.image_url.end(), '|', ',');
+        std::replace(art.author.begin(), art.author.end(), '|', ',');
+		std::replace(art.title.begin(), art.title.end(), '|', ',');
+		std::replace(art.subtitle.begin(), art.subtitle.end(), '|', ',');
+		std::replace(art.description.begin(), art.description.end(), '|', ',');
+        std::replace(art.id.begin(), art.id.end(), '|', ',');
+
+        // Replace ~ with "
+        std::replace(art.image_url.begin(), art.image_url.end(), '~', '"');
+        std::replace(art.author.begin(), art.author.end(), '~', '"');
+        std::replace(art.title.begin(), art.title.end(), '~', '"');
+        std::replace(art.subtitle.begin(), art.subtitle.end(), '~', '"');
+        std::replace(art.description.begin(), art.description.end(), '~', '"');
+        std::replace(art.id.begin(), art.id.end(), '~', '"');
+
         subtitle = pradoInterface.splitSubtitle(art.subtitle);
         art.year = subtitle.year;
         GlobalGallery.push_back(art);
         ++idcount;
+
+        printArtworkVector(GlobalGallery, "GlobalGallery");
     }
 
     std::cout << "Loaded " << GlobalGallery.size() << " artworks.\n";
@@ -150,7 +176,6 @@ int main(int argc, char* argv[])
 
     // ------------------- SORT GLOBAL GALLERY -------------------
 	std::cout << "\n[SortGlobalGallery] Test:\n";
-    printArtworkVector(GlobalGallery, "----Artwork Gallery Before Sort----");
 
 	pradoInterface.sortArtworks(SortCriteria::Title);
     printArtworkVector(GlobalGallery, "----Artwork Gallery After Title Sort----");

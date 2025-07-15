@@ -28,7 +28,8 @@ Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
         }
     }
 
-    throw std::runtime_error("Artwork ID not found: " + artworkId);
+    std::cout << "Artwork ID not found: " << artworkId << std::endl;
+    return Artwork();
 }
 
 cv::Mat ArtworkManager::applyFilter(const cv::Mat& image, const std::map<std::string, int>& params)

@@ -40,7 +40,7 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
             });
         break;
     case Oldest:
-        std::sort(GlobalGallery.end(), GlobalGallery.begin(), 
+        std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
                 return a.year < b.year;
             });
@@ -52,7 +52,7 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
             });
         break;
 	default:
-        std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
+        std::cout << "Unknown sorting criteria: " << criteria << std::endl;
         break;
     }
 }
