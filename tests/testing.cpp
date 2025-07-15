@@ -118,3 +118,70 @@ TEST(EditorManagerTest, RotateImageDoesNotThrow)
     cv::Mat rotated = manager.rotateImage("rotate_test", 45);
     EXPECT_FALSE(rotated.empty());
 }
+
+TEST(ArtworkInterfaceTests, GetArtworkGalleryReturnsAll)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    auto list = iface.getArtworkGallery();
+    // Expect gallery size matches mock
+    EXPECT_EQ(list.size(), 3);
+}
+
+TEST(ArtworkInterfaceTests, SortArtworksByNewest)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    iface.sortArtworks("Newest");
+    auto list = iface.getArtworkGallery();
+    // First artwork should be year 2020
+    EXPECT_EQ(list.front().year, "2020");
+}
+
+TEST(ArtworkInterfaceTests, SortArtworksByArtistAlphabetically)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    iface.sortArtworks("Artist");
+    auto list = iface.getArtworkGallery();
+    // First author should be Artist X
+    EXPECT_EQ(list.front().author, "Artist X");
+}
+
+TEST(ArtworkInterfaceTests, SortArtworksInvalidCriteriaDoesNotThrow)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    // Just test it runs without crashing (no exception)
+    iface.sortArtworks("UnknownCriterion");
+    SUCCEED();
+}
+
+TEST(ArtworkInterfaceTests, GetArtworkDescriptionValidID)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    auto art = iface.getArtworkDescription("002");
+    // Should find Title B
+    EXPECT_EQ(art.work_title, "Title B");
+}
+
+TEST(ArtworkInterfaceTests, GetArtworkDescriptionInvalidIDReturnsEmpty)
+{
+    setupDummyGallery();
+    PradoEditorMobileInterface iface;
+    auto art = iface.getArtworkDescription("999");
+    // Should return empty title
+    EXPECT_TRUE(art.work_title.empty());
+}
+
+TEST(ArtworkInterfaceTests, SplitSubtitleNormalCase)
+{
+    PradoEditorMobileInterface iface;
+    std::string input = "1999. Oil on canvas, 120 x 80 cm";
+    SubtitleData sub = iface.splitSubtitle(input);
+    // Year and medium and dimensions should be extracted
+    EXPECT_EQ(sub.year, "1999");
+    EXPECT_EQ(sub.medium.find("Oil"), 0);
+    EXPECT_TRUE(sub.dimensions.find("cm") != std::string::npos);
+}
