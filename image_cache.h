@@ -10,9 +10,9 @@ class ImageCache {
 private:
 	static void printUsageList();
 public:
-    static int max_images;
-    static std::list<std::string> usage_list; // Most recently used id will be at the front of the list
-    static std::unordered_map<std::string, cv::Mat> image_map; // Mat is OpenCV's matrix object to represent an image
+    static int maxImages;
+    static std::list<std::string> usageList; // Most recently used id will be at the front of the list
+    static std::unordered_map<std::string, cv::Mat> imageMap; // Mat is OpenCV's matrix object to represent an image
 
     static void updateUsage(const std::string& artworkId);
     static void addImage(const std::string& artworkId, const cv::Mat& image);
