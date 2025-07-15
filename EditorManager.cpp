@@ -68,7 +68,7 @@ cv::Mat ArtworkManager::cropImage(const cv::Mat& image, const std::map<std::stri
 }
 
 Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<std::string, int>& params) {
-    // Contributors: Huiwen Jia
+    // Contributors: Huiwen Jia and Lucas Giebler
     // Input: const std::string& artworkId, const std::map<std::string, int>& params
     // Purpose: To perform both cropping and filtering operations on the image
     // Return: Artwork object with the edited image
@@ -88,7 +88,7 @@ Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<s
 
 cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
     {
-        // Contributors : Sarah
+        // Contributors : Sarah and Taro
         // Purpose : rotate the image clockwise by the requested angle
         // Parameters :
         // artworkID: a string that identifies a unique artpiece (str)
@@ -119,7 +119,7 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
 }
 
 void EditorManager::resetImage(const std::string& artworkId) {
-    //Contributors: Taro Welches
+    //Contributors: Taro Welches and Sarah
     //Input: const std::string&artworkId
     //Purpose: To restore an edited image's values back to the original
     //Return: None
