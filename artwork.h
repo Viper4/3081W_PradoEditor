@@ -31,6 +31,12 @@ struct Artwork {
     int originalX = 0;
     int originalY = 0;
 };
+struct SubtitleData
+{
+    std::string year;
+    std::string medium;
+    std::string dimensions;
+};
 
 // -------------------
 // Prado Interface
