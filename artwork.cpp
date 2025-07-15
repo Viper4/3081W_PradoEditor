@@ -71,13 +71,6 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
         return subtitle;
 }
 
-void PradoEditorMobileInterface::cropImage(const std::string& artworkId, int x, int y, int width, int height) {
-    std::cout << "Cropping image for artwork ID: " << artworkId
-              << " to region x=" << x << " y=" << y
-              << " width=" << width << " height=" << height << std::endl;
-    // Placeholder
-}
-
 void cv::Mat getImage(const std::string& artworkId){
     std::cout << "make some sort of call to getimagecache and then error handle\n";
 }
