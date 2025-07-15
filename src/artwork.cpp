@@ -10,32 +10,53 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery() {
     return result;
 }
 
-void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
+
     //Contributors: Taro Welches and Lucas Giebler
     //Input: const std::string& criteria
     //Purpose: To sort the displayed artwork by a certain criteria input by user
     //return: none
-    std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
-
-    if (criteria == "Newest") {
-        std::sort(entries.begin(), entries.end(),
-                  [](const auto& a, const auto& b) { return a.second.year > b.second.year; });
-    } else if (criteria == "Oldest") {
-        std::sort(entries.begin(), entries.end(),
-                  [](const auto& a, const auto& b) { return a.second.year < b.second.year; });
-    } else if (criteria == "Artist") {
-        std::sort(entries.begin(), entries.end(),
-                  [](const auto& a, const auto& b) { return a.second.author < b.second.author; });//alphabetical ig
-    } else {
+void PradoEditorMobileInterface::sortArtworks(const std::string& criteria) {
+    if (criteria != "Newest" && criteria != "Oldest" && criteria != "Artist") {
         std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
         return;
     }
 
-    GlobalGallery.clear();
-    for (const auto& [id, artwork] : entries) {
-        GlobalGallery[id] = artwork;
+    for (size_t i = 0; i < GlobalGallery.size(); ++i) {
+        for (size_t j = i + 1; j < GlobalGallery.size(); ++j) {
+            bool shouldSwap = false;
+
+            if (criteria == "Newest") {
+                shouldSwap = GlobalGallery[j].year > GlobalGallery[i].year;
+            } else if (criteria == "Oldest") {
+                shouldSwap = GlobalGallery[j].year < GlobalGallery[i].year;
+            } else if (criteria == "Artist") {
+                shouldSwap = GlobalGallery[j].author < GlobalGallery[i].author;
+            }
+
+            if (shouldSwap) {
+                std::swap(GlobalGallery[i], GlobalGallery[j]);
+            }
+        }
     }
 }
+std::vector<Artwork> PradoEditorMobileInterface::searchArtworks(const std::string& query) {
+    std::vector<Artwork> SearchGallery;
+    //Contributors: Taro 
+    //Input: const std::string& criteria
+    //Purpose: To search the gallery by the user's input and return a new gallery full of new artworks
+    //return: SearchGallery, a vector of artwork objects
+    for (size_t i = 0; i < GlobalGallery.size(); ++i) {
+        const Artwork& art = GlobalGallery[i];
+        if (art.work_title.find(query) != std::string::npos ||
+            art.author.find(query) != std::string::npos ||
+            art.year.find(query) != std::string::npos ||
+            art.work_description.find(query) != std::string::npos) {
+            SearchGallery.push_back(art);
+        }
+    }
+    return SearchGallery;
+}
+
 
 
 std::string PradoEditorMobileInterface::getArtworkDescription(const std::string& artworkId) {
