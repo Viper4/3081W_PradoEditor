@@ -1,11 +1,11 @@
-#include <image_scroll_gallery.h>
+#include <include/image_scroll_gallery.h>
 #include <iostream>
 #include <QScrollBar>
 #include <QObject>
 #include <QListView>
 #include <QStandardItemModel>
 #include <QStringListModel>
-#include <image_cache.h>
+#include <include/image_cache.h>
 
 ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int numTotalImages, int imagesPerRow, int iconSize, int itemSize) {
 	// Contributors: Lucas Giebler

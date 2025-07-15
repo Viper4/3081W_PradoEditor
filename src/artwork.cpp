@@ -1,18 +1,24 @@
-#include "artwork.h"
+#include "include/artwork.h"
 #include <opencv2/imgcodecs.hpp>
 #include <iostream>
+#include <include/image_cache.h>
+#include <include/managers.h>
+#include <regex>
 
 std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery()
 {
-    std::vector<Artwork> result;
+    // What are we doing here? Just copying the GlobalGallery??
+
+    /*std::vector<Artwork> result;
+    result = GlobalGallery;
     for (const auto &[id, artwork] : GlobalGallery)
     {
         result.push_back(artwork);
     }
-    return result;
+    return result;*/
 }
 
-void PradoEditorMobileInterface::sortArtworks(const std::string &criteria)
+void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
 {
     // Contributors: Taro Welches and Lucas Giebler
     // Input: const std::string& criteria
@@ -20,56 +26,64 @@ void PradoEditorMobileInterface::sortArtworks(const std::string &criteria)
     // return: none
     std::vector<std::pair<std::string, Artwork>> entries(GlobalGallery.begin(), GlobalGallery.end());
 
-    if (criteria == "Newest")
-    {
+    switch (criteria) {
+    case Title:
+		std::sort(entries.begin(), entries.end(),
+			[](const auto& a, const auto& b)
+			{ return a.second.title < b.second.title; });
+        break;
+    case Newest:
         std::sort(entries.begin(), entries.end(),
-                  [](const auto &a, const auto &b)
-                  { return a.second.year > b.second.year; });
-    }
-    else if (criteria == "Oldest")
-    {
+            [](const auto& a, const auto& b)
+            { return a.second.year > b.second.year; });
+        break;
+    case Oldest:
         std::sort(entries.begin(), entries.end(),
-                  [](const auto &a, const auto &b)
-                  { return a.second.year < b.second.year; });
-    }
-    else if (criteria == "Artist")
-    {
+            [](const auto& a, const auto& b)
+            { return a.second.year < b.second.year; });
+        break;
+    case Artist:
         std::sort(entries.begin(), entries.end(),
-                  [](const auto &a, const auto &b)
-                  { return a.second.author < b.second.author; }); // alphabetical ig
-    }
-    else
-    {
+            [](const auto& a, const auto& b)
+            { return a.second.author < b.second.author; }); // alphabetical ig
+        break;
+	default:
         std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
-        return;
+        break;
     }
 
     GlobalGallery.clear();
     for (const auto &[id, artwork] : entries)
     {
-        GlobalGallery[id] = artwork;
+        GlobalGallery.push_back(artwork);
     }
-}
-
-std::string PradoEditorMobileInterface::getArtworkDescription(const std::string &artworkId)
-{
-    Artwork *art = getArtworkById(artworkId);
-    if (!art)
-    {
-        std::cerr << "Error: artwork not found\n";
-        return "Description not available";
-    }
-    return art->work_description;
 }
 
 SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_subtitle)
 {
     // Contributors : Sarah and Taro and Lucas
-    // Purpose : split the given string subtitle description into a struct containing separate year, medium, and
+    // Purpose : split the given string subtitle description into a struct containing separate year, medium, and dimensions
     // Parameters : work_subtitle: the original subtitle field in paragraph form
     // Return Value: subtitle: a struct of the original subtitle field
     SubtitleData subtitle;
-    size_t dotPos = work_subtitle.find('.');
+    std::regex pattern(R"(([^.]*)\. ([^,]*), (.*))");
+    std::smatch matches;
+
+    if (std::regex_match(work_subtitle, matches, pattern)) {
+        std::cout << "Full match: " << matches[0] << "\n";
+        std::cout << "Group 1 (before period): " << matches[1] << "\n";
+        std::cout << "Group 2 (before comma): " << matches[2] << "\n";
+        std::cout << "Group 3 (rest): " << matches[3] << "\n";
+
+		subtitle.year = matches[1];
+		subtitle.medium = matches[2];
+		subtitle.dimensions = matches[3];
+    }
+    else {
+        std::cerr << "No match found.\n";
+    }
+
+    /*size_t dotPos = work_subtitle.find('.');
 
     for (size_t i = 0; i < dotPos; i++)
     {
@@ -85,17 +99,13 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
     std::string medium = work_subtitle.substr(yrPos + 1, medPos - yrPos - 1);
     subtitle.medium = std::string(trim(medium));
 
-    subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));
+    subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));*/
 
     return subtitle;
 }
 
 cv::Mat getImage(const std::string &artworkId)
 {
+
     std::cout << "make some sort of call to getimagecache and then error handle\n";
 }
-
-
-
-
-

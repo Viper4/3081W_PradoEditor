@@ -1,7 +1,7 @@
-#include <prado_editor.h>
+#include <include/prado_editor.h>
 #include <QtWidgets/QApplication>
-#include <image_cache.h>
-#include <image_scroll_gallery.h>
+#include <include/image_cache.h>
+#include <include/image_scroll_gallery.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 

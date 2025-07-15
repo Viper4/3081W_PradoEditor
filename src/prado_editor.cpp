@@ -1,4 +1,4 @@
-#include "prado_editor.h"
+#include "include/prado_editor.h"
 
 PradoEditor::PradoEditor(QWidget *parent)
     : QMainWindow(parent)

@@ -8,8 +8,13 @@ struct Artwork
 {
     std::string id;
     cv::Mat image;
+    std::string image_url;
     std::string description;
-    std::string work_image_url;
+    std::string author;
+	std::string title;
+	std::string subtitle;
+	std::string year;
+
 
     Artwork() = default;
     Artwork(const std::string &id, const cv::Mat &img)
@@ -17,7 +22,6 @@ struct Artwork
 };
 
 extern std::vector<Artwork> GlobalGallery;
-#endif
 
 // # work_url: string
 // # work_image_url: string
@@ -34,12 +38,18 @@ struct SubtitleData
     std::string dimensions;
 };
 
+enum SortCriteria {
+    Title,
+    Newest,
+    Oldest,
+    Artist
+};
+
 class PradoEditorMobileInterface
 {
 public:
     std::vector<Artwork> getArtworkGallery();
-    void sortArtworks(const std::string &criteria);
-    std::string getArtworkDescription(const std::string &artworkId);
+    void sortArtworks(const SortCriteria &criteria);
     SubtitleData splitSubtitle(const std::string &work_subtitle);
 };
 

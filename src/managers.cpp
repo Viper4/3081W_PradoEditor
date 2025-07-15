@@ -1,9 +1,10 @@
-#include "EditorManager.h"
+#include "include/managers.h"
 #include <stdexcept>
 #include <iostream>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <include/artwork.h>
 
 Artwork ArtworkManager::getArtworkByID(const std::string &artworkId)
 {
@@ -125,7 +126,7 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
     // FINISH: UPDATE IMAGE;
     return new_image;
 }
-}
+
 
 void EditorManager::resetImage(const std::string &artworkId)
 {
