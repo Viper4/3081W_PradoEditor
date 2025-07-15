@@ -4,7 +4,8 @@
 #include <sstream>
 #include <iostream>
 
-std::vector<Artwork> GlobalGallery; // Declare global gallery
+std::vector<Artwork> GlobalGallery;
+//This GlobalGallery is our main page's structs
 
 int main() {
     std::ifstream file("smallerpaintings.csv");
@@ -34,6 +35,7 @@ int main() {
     }
 
     std::cout << "Loaded " << GlobalGallery.size() << " artworks.\n";
+
 
     return 0;
 }
