@@ -23,7 +23,7 @@ import csv
 import re
 from io import StringIO
 
-input_file = "prado.csv"
+input_file = "smallerpaintings.csv"
 output_file = "clean_" + input_file
 
 with open(input_file, mode="r", encoding="utf-8", newline='') as infile, \
