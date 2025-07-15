@@ -1,20 +1,36 @@
-#include "prado_editor.h"
+#include <prado_editor.h>
 #include <QtWidgets/QApplication>
 #include <image_cache.h>
 #include <image_scroll_gallery.h>
+#include <iostream>
+#include <opencv2/opencv.hpp>
 
 #ifdef _WIN32
 #include <windows.h>
-#include <iostream>
 #endif
 
 static void initializeConsole() {
+    // Contributors: Lucas Giebler
+	// Purpose: Initialize the console for debugging
+    // Parameters: 
+    // Return Value: void
+	// -------------------
 #ifdef _WIN32
     AllocConsole();                   // Allocate a new console window
     FILE* fpOut;
     freopen_s(&fpOut, "CONOUT$", "w", stdout);  // Redirect stdout to console
     freopen_s(&fpOut, "CONOUT$", "w", stderr);  // Redirect stderr to console
     std::cout << "Custom console initialized" << std::endl;
+#else
+    // Redirect stdout and stderr to a log file on macOS/Linux
+    FILE* fpOut = freopen("/tmp/myapp_stdout.log", "w", stdout);
+    FILE* fpErr = freopen("/tmp/myapp_stderr.log", "w", stderr);
+    if (fpOut && fpErr) {
+        std::cout << "Console output redirected to /tmp/*.log (Unix)" << std::endl;
+    }
+    else {
+        std::cerr << "Failed to redirect console output on Unix" << std::endl;
+    }
 #endif
 }
 
@@ -30,17 +46,12 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     PradoEditor window;
-    ImageScrollGallery gallery = ImageScrollGallery(&window, 0, 0, 100, 100, 0, 0, 3);
-    ImageCache::maxImages = 3;
-    ImageCache::addImage("1", cv::Mat(100, 100, CV_8UC3));
-    ImageCache::addImage("2", cv::Mat(100, 100, CV_8UC3));
-    ImageCache::addImage("3", cv::Mat(100, 100, CV_8UC3));
+    cv::Mat temp_image = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\Absolute Cinema.jpg");
+    for (int i = 10; i < 75; i++) {
+		ImageCache::addImage(std::to_string(i), temp_image);
+    }
 
-    ImageCache::updateUsage("1");
-
-    ImageCache::addImage("4", cv::Mat(100, 100, CV_8UC3));
-
-    ImageCache::getCachedImage("2");
+    ImageScrollGallery gallery = ImageScrollGallery(&window, 0, 0, 500, 500, 10, 10, 1000, 3, 125, 150);
 
     window.show();
     return app.exec();
