@@ -15,21 +15,21 @@
 // -------------------
 struct Artwork {
     std::string id = "";
-    std::string work_title = "";
-    std::string work_image_url = "";
-    std::string original_work_image_url = "";
+    std::string workTitle = "";
+    std::string workImageUrl = "";
+    std::string originalWorkImageUrl = "";
     std::string author = "";
-    std::string author_bio = "";
-    std::string author_id = "";
-    std::string author_url = "";
-    std::string work_subtitle = "";
+    std::string authorBio = "";
+    std::string authorId = "";
+    std::string authorUrl = "";
+    std::string workSubtitle = "";
     std::string year = "";
-    std::string work_description = "";
-    std::string work_exposed = "";
+    std::string workDescription = "";
+    std::string workExposed = "";
     int x = 0;
     int y = 0;
-    int original_x = 0;
-    int original_y = 0;
+    int originalX = 0;
+    int originalY = 0;
 };
 
 // -------------------
