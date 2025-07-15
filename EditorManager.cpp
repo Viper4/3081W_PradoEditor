@@ -85,3 +85,35 @@ Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<s
 
     return Artwork(artworkId, image);
 }
+
+cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
+    {
+        // Contributors : Sarah
+        // Purpose : rotate the image clockwise by the requested angle
+        // Parameters :
+        // artworkID: a string that identifies a unique artpiece (str)
+        // angle: the angle in degrees to rotate the image by (double)
+        // Return Value: new_image: the newly rotated version of the image (Matrix)
+        Mat src = getImage(artworkId);
+        Point2f center(src.cols / 2.0F, src.rows / 2.0F);
+        // conver the angle to radians
+        angle = angle * CV_PI / 180.0;
+
+        // get the rotation matrix
+        Mat rot = getRotationMatrix2D(center, angle, 1.0);
+
+        // bounding box to prevent cropping
+        Rect2f bound_box = RotatedRect(Point2f(), src.size(), angle).boundingRect2f();
+
+        // adjust the transformation matrix based on bounds
+        rot.at<double>(0, 2) += bound_box.width / 2.0 - src.cols / 2.0;
+        rot.at<double>(1, 2) += bound_box.height / 2.0 - src.rows / 2.0;
+
+        // rotate and save the new image
+        Mat new_image;
+        warpAffine(src, new_image, rot, bound_box.size());
+
+        // FINISH: UPDATE IMAGE;
+        return new_image;
+    }
+}
