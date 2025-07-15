@@ -17,7 +17,6 @@ struct Artwork
 };
 
 extern std::vector<Artwork> GlobalGallery;
-#endif
 
 // # work_url: string
 // # work_image_url: string
