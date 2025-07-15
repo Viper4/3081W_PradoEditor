@@ -4,12 +4,12 @@
 #include <list>
 #include <string>
 #include <unordered_map>
-
-using namespace cv;
+#include <opencv2/core.hpp>
+#include <QListView>
 
 class ImageScrollGallery {
 private:
-	Qt::QListView* listView;
+	QListView* listView;
 	float pos_x;
 	float pos_y;
 	float width;
