@@ -45,13 +45,61 @@ struct SubtitleData
 // Input/Output: None
 // -------------------
 class PradoEditorMobileInterface {
+private:
+    std::string trim(const std::string &str)
+    {
+        // Contributors : Sarah
+        // Purpose : inline function to trim the substrs for the subtitle struct
+        // Parameters: str: a string of the the subtitle field to be split
+        // Return Value : a substr of the original input (string)
+        size_t start = str.find_first_not_of(' ');
+        size_t end = str.find_last_not_of(' ');
+
+        if (start == std::string::npos || end == std::string::npos)
+            return "";
+
+        return str.substr(start, end - start + 1);
+    }
 public:
     PradoEditorMobileInterface() = default;
 
     cv::Mat getArtworkGallery();
-    void sortArtworks(const std::string& criteria);
+    void sortArtworks(const std::string& criteria){
+        {
+        if (criteria == "Newest")
+        {
+            std::sort(gallery.begin(), gallery.end(), [](const Artwork &a, const Artwork &b)
+                      { return a.year > b.year; });
+        }
+        else if (criteria == "Oldest")
+        {
+            std::sort(gallery.begin(), gallery.end(), [](const Artwork &a, const Artwork &b)
+                      { return a.year < b.year; });
+        }
+        else if (criteria == "Artist")
+        {
+            std::sort(gallery.begin(), gallery.end(), [](const Artwork &a, const Artwork &b)
+                      { return a.author < b.author; });
+        }
+        else
+        {
+            std::cerr << "Unknown sorting criteria: " << criteria << std::endl;
+        }
+    }
     //void resetImage(const std::string& artworkId); Moved to EditorManager.cpp
-    Artwork getArtworkDescription(const std::string& artworkId);
+    Artwork getArtworkDescription(const std::string& artworkId){
+        {
+        // Contributors : Sarah
+        // Purpose : retrieve an artwork description
+        // Parameters : artworkID: a string that identifies a unique artpiece (str)
+        // Return Value: either the artwork description or its availability status (str)
+        Artwork *art = findArtworkById(artworkId);
+        if (!art || art->work_description.empty())
+        {
+            return "Description not available.";
+        }
+        return art->work_description;
+    };
     //Artwork applyFilterToImage(const std::string& artworkId); Moved to EditorManager.cpp
     SubtitleData splitSubtitle(const std::string& workSubtitle);
     //void editImage(const std::string& artworkId); Moved to EditorManager.cpp
