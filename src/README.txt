@@ -2,10 +2,12 @@
 
 This directory contains the implementation files for the Prado Editor application. These source files define the core business logic, user interface behavior, and image processing functionality.
 
-## Files
+.cpp Files
 
 1. `main.cpp`
 Handles application entry point. Loads artwork metadata from a CSV, populates the global gallery, tests filter and sort functionality, and launches the UI via `PradoEditor`.
+
+(Note: main_old.cpp is simply an old version of main to look back for reference and serves no functionality in the latest program)
 
 2. `managers.cpp`
 Implements the `ArtworkManager` and `EditorManager` methods. Handles:
