@@ -5,7 +5,6 @@
 This document describes the header files that define the core architecture of the Prado Editor project. These interfaces collectively describe how artwork data is managed, edited, and displayed in the application. They do not contain implementation logic—only declarations and structural design—for better maintainability and modularity.
 
 ## Header Interfaces:
-------------------
 
 1. **`artwork.h`**
    - **Purpose:** Defines the `Artwork` struct representing a single art piece and its attributes.
@@ -43,14 +42,14 @@ This document describes the header files that define the core architecture of th
    - **NOTE:** scroll+cache approach was deprecated in Version 1.0, this header remains for optional reactivation in later versions.
 
 ## Purpose:
---------
+
 These headers separate interfaces from implementation to promote clean modularization by:
 - Isolating declarations (interfaces) from logic (in .cpp files),
 - Supporting easy unit testing and mocking
 - Promoting reusability across GUI and image modules
 
 ## Dependencies:
---------
+
 The header files in this folder rely on the following libraries and components:
 
 ### **OpenCV**
@@ -69,6 +68,6 @@ Common containers and utilities:
 - <vector> and <string>: Widely used for storing artwork data and metadata.
 
 ## Authors:
---------
+
 Huiwen Jia, Lucas Giebler, Sarah Wood, Taro Welches
 For: MADR3081W
