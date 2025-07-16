@@ -52,10 +52,10 @@ These headers separate interfaces from implementation to promote clean modulariz
 
 The header files in this folder rely on the following libraries and components:
 
-### **OpenCV**
+### [**OpenCV**](https://opencv.org/)
 Provides image processing functionality. cv::Mat is used for operations such as cropping, resizing, and filtering artwork images to maintain their resolution and bounds.
 
-### **Qt**
+### [**Qt**](https://www.qt.io/)
 Required for GUI components and image handling. Includes:
 - QMainWindow (in prado_editor.h) for the main application window.
 - QPixmap for efficient image representation and rendering in the UI.
