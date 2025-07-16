@@ -48,7 +48,7 @@ The test layer requires:
 Enable testing using the CMake (`CMakeLists.txt` file).
 
 ### Build and Run:
-<pre> ```
+<pre> 
    mkdir build && cd build
    
    cmake ..
@@ -56,7 +56,7 @@ Enable testing using the CMake (`CMakeLists.txt` file).
    make
    
    ctest --verbose
-``` </pre>
+</pre>
 
 ## Authors
 Huiwen Jia, Lucas Gieber, Sarah Wood, Taro Welches
