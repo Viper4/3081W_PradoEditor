@@ -1,6 +1,6 @@
 READ ME for images folder
 
-Folder contains two csv files, one called smallerpaintings.csv which is a csv containing 50 rows of data sourced from 
+Folder contains two csv files, one called smallerpaintings.csv which is a small csv containing 50 rows of data sourced from 
 https://www.kaggle.com/datasets/maparla/prado-museum-pictures. It is split into columns containing useful data to assign the attributes 
 that we need for our Artwork structs found inside the artwork.h file under the include folder.
 
