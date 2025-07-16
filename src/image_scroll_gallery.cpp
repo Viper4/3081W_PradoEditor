@@ -14,9 +14,9 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	//             float y
 	//             float width
 	//			   float height
-	//             float bufferX
-	//             float bufferY
-	//             int imagesPerRow
+	//             float bufferX - the buffer between the edge of the gallery and the edge of the window
+	//             float bufferY - the buffer between the edge of the gallery and the edge of the window
+	//             int imagesPerRow - the number of images per row
 	// Return Value: ImageScrollGallery
 	// Limitations: 
 	// -------------------
@@ -61,9 +61,9 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 
 void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	// Contributors: Lucas Giebler
-	// Purpose: Loads images into the scroll view
-	// Parameters: int firstIndex
-	//             int lastIndex
+	// Purpose: Loads images into the scroll view between firstIndex and lastIndex
+	// Parameters: int firstIndex - The index of the first image to load
+	//             int lastIndex - The index of the last image to load
 	// Return Value: void
 	// Limitations: 
 	// -------------------
@@ -85,10 +85,10 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 QPixmap ImageScrollGallery::fitPixmapToSize(const QPixmap& pixmap, int width, int height, bool keepAspectRatio) {
 	// Contributors: Lucas Giebler
 	// Purpose: Scales a pixmap to fit a given width and height
-	// Parameters: QPixmap pixmap
-	//             int width
-	//             int height
-	//             bool keepAspectRatio
+	// Parameters: QPixmap pixmap - The pixmap to scale
+	//             int width - The width to scale the pixmap to
+	//             int height - The height to scale the pixmap to
+	//             bool keepAspectRatio - Whether to keep the aspect ratio
 	// Return Value: QPixmap
 	// Limitations: 
 	// -------------------
@@ -116,7 +116,7 @@ QPixmap ImageScrollGallery::fitPixmapToSize(const QPixmap& pixmap, int width, in
 void ImageScrollGallery::onScroll(int value) {
 	// Contributors: Lucas Giebler
 	// Purpose: Runs every time the scroll view is scrolled and updates the images in the view
-	// Parameters: 
+	// Parameters: int value - The value of the scroll bar (unused)
 	// Return Value: void
 	// Limitations: 
 	// -------------------

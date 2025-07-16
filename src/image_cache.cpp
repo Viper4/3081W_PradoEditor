@@ -9,7 +9,7 @@ std::unordered_map<std::string, cv::Mat> ImageCache::imageMap; // Mat is OpenCV'
 void ImageCache::printUsageList(const std::string& label) {
     // Contributors: Lucas Giebler
 	// Purpose: Prints the usage list
-	// Parameters: string label
+	// Parameters: string label - The label to print before the usage list
 	// Return Value: void
 	// Limitations:
     // -------------------
@@ -22,8 +22,8 @@ void ImageCache::printUsageList(const std::string& label) {
 
 void ImageCache::updateUsage(const std::string& artworkId) {
     // Contributors: Lucas Giebler
-    // Purpose: Updates the usage of the artworkId in the linked list
-    // Parameters: string artworkId
+    // Purpose: Updates the usage of the artworkId in the linked list (most recently used will be at the front)
+    // Parameters: string artworkId - The id of the artwork
     // Return Value: void
     // Limitations: 
     // -------------------
@@ -39,8 +39,8 @@ void ImageCache::updateUsage(const std::string& artworkId) {
 void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
     // Contributors: Lucas Giebler
     // Purpose: Adds a new image to the cache
-    // Parameters: string artworkId
-    //             cv::Mat image
+    // Parameters: string artworkId - The id of the artwork
+    //             cv::Mat image - The image to associate with the id
     // Return Value: void
     // Limitations:
     // -------------------
@@ -56,7 +56,7 @@ void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
 cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
     // Contributors: Lucas Giebler
     // Purpose: Tries to retrieve an image from the cache using the artworkId
-    // Parameters: string artworkId
+    // Parameters: string artworkId - The id of the artwork to retrieve its image
     // Return Value: cv::Mat
     // Limitations: 
     // -------------------
@@ -70,7 +70,7 @@ cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
 QPixmap ImageCache::matToQPixmap(const cv::Mat& image) {
     // Contributors: https://forum.qt.io/topic/160407/convert-cv-mat-into-qpixmap
     // Purpose: Converts a cv::Mat to a QPixmap
-    // Parameters: cv::Mat image
+    // Parameters: cv::Mat image - The image to convert
     // Return Value: QPixmap
     // Limitations: 
     // -------------------

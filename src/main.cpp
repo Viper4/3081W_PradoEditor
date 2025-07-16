@@ -45,8 +45,8 @@ static void initializeConsole() {
 
 static void printArtwork(const Artwork& art) {
     // Contributors: Lucas Giebler
-    // Purpose: Initialize a custom console UI for debugging
-    // Parameters: 
+    // Purpose: Print a few properties of the given Artwork
+    // Parameters: Artwork art - artwork to print
     // Return Value: void
     // Limitations: 
     // -------------------
@@ -61,8 +61,10 @@ static void printArtwork(const Artwork& art) {
 
 static void printArtworkVector(const std::vector<Artwork>& vec, const std::string& label, int count) {
     // Contributors: Lucas Giebler
-	// Purpose: Print the contents of the Artwork vector
-	// Parameters: const std::vector<Artwork>& vec
+	// Purpose: Print the contents of the given Artwork vector
+	// Parameters: const std::vector<Artwork>& vec - vector to print
+    //             const std::string& label - label to print before printing artworks
+    //             int count - maximum number of artworks to print
 	// Return Value: void
 	// Limitations: 
     std::cout << label << std::endl;
@@ -75,9 +77,10 @@ static void printArtworkVector(const std::vector<Artwork>& vec, const std::strin
 
 int main(int argc, char* argv[])
 {
-    // Contributors: Lucas Giebler
-    // Purpose: Initialize a custom console UI for debugging
-    // Parameters: 
+    // Contributors: Lucas, Taro, Sarah, and Huiwen
+    // Purpose: Run the application
+    // Parameters: int argc - number of command line arguments
+    //             char* argv[] - array of command line arguments
     // Return Value: void
     // Limitations: 
     // -------------------
@@ -114,25 +117,25 @@ int main(int argc, char* argv[])
         std::getline(stream, art.metadata["author_id"], ',');
         std::getline(stream, art.metadata["work_title"], ',');
         std::getline(stream, art.metadata["subtitle"], ',');
-        std::getline(stream, art.metadata["work_exposed"], ',');
+        std::getline(stream, art.metadata["work_exposed"], ','); // Where in the museum the artwork is
         std::getline(stream, art.metadata["description"], ',');
         std::getline(stream, art.metadata["work_tags"], ',');
         std::getline(stream, art.metadata["id"], ','); // Catalog number is our ID
         std::getline(stream, art.metadata["sheet_author"], ','); // Redundant, same as author
 		std::getline(stream, art.metadata["sheet_title"], ','); // Redundant, same as work_title
-		std::getline(stream, art.metadata["sheet_date"], ',');
-		std::getline(stream, art.metadata["sheet_technique"], ',');
-		std::getline(stream, art.metadata["sheet_support"], ',');
+		std::getline(stream, art.metadata["sheet_date"], ','); // Date when the artwork was created
+		std::getline(stream, art.metadata["sheet_technique"], ','); // Technique used to make the artwork
+		std::getline(stream, art.metadata["sheet_support"], ','); // What the artwork was made on for paintings (paper, canvas, etc.)
 		std::getline(stream, art.metadata["sheet_dimensions"], ',');
 		std::getline(stream, art.metadata["sheet_series"], ',');
 		std::getline(stream, art.metadata["sheet_origin"], ',');
 		std::getline(stream, art.metadata["bibliography"], ',');
 		std::getline(stream, art.metadata["inventory"], ',');
-		std::getline(stream, art.metadata["expositions"], ',');
-		std::getline(stream, art.metadata["ubication"], ',');
+		std::getline(stream, art.metadata["expositions"], ','); // Description of the signature for the artwork I think?
+		std::getline(stream, art.metadata["publication"], ',');
 		std::getline(stream, art.metadata["sheet_authors"], ',');
 		std::getline(stream, art.metadata["sheet_edition"], ',');
-        std::getline(stream, art.metadata["sheet_material"], ',');
+        std::getline(stream, art.metadata["sheet_material"], ','); // Material of the artwork for non-paintings (bronze, stone, etc.)
         std::getline(stream, art.metadata["sheet_ceca"], ',');
 		std::getline(stream, art.metadata["sheet_autora"], ','); // Redundant, same as author
 		std::getline(stream, art.metadata["sheet_production_place"], ',');
