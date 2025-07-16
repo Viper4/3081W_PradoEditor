@@ -7,3 +7,6 @@ that we need for our Artwork structs found inside the artwork.h file under the i
 The other csv file is called clean_smallerpaintings.csv. It is a cleaned version of smallerpaintings.csv that is easier to parse and is cleaned
 by the csv_fixer.py file.
 Overall, it has some columns in the smallerpaintings.csv removed to make the storage more efficient, and faster to parse.
+
+
+USED FOR TESTING PURPOSES. Database and url query will be implemented to allow for larger amounts of artworks for the user.
