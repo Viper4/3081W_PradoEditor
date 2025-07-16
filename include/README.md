@@ -1,4 +1,4 @@
-### README.txt — Prado Editor Interfaces
+### README.md — Prado Editor Interfaces
 
 ## Overview:
 ---------
