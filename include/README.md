@@ -2,53 +2,73 @@
 
 ## Overview:
 ---------
-This document describes the header/interface files that define the core architecture of the Prado Editor project.
-These interfaces collectively describe how artwork data is managed, edited, and displayed in the application.
-They do not contain implementation logic — only declarations and structural design.
+This document describes the header files that define the core architecture of the Prado Editor project. These interfaces collectively describe how artwork data is managed, edited, and displayed in the application. They do not contain implementation logic—only declarations and structural design—for better maintainability and modularity.
 
 ## Header Interfaces:
 ------------------
 
 1. **`artwork.h`**
-   - Defines the `Artwork` struct representing a single art piece.
-   - Attributes include: title, author, image URL, subtitle, year, description, dimensions, and more.
-   - Also defines `SubtitleData`, a helper struct used to split the `subtitle` into:
-       • year
-       • medium
-       • dimensions
-   - Declares a global `std::vector<Artwork> GlobalGallery` that stores all artworks at runtime.
+   - **Purpose:** Defines the `Artwork` struct representing a single art piece and its attributes.
+   - **Key Features:**
+        - Attributes include: `work_title`, `author`, `work_url`, `work_image_url`, `work_subtitle`, and `work_description`, 
+        - Also defines `SubtitleData`, a helper struct used to split the `work_subtitle` into:
+             - `year`: the year the painting creation began
+             - `medium`: the material of the painting (e.g. acrylics, oil, etc.)
+             - `dimensions`: the size of the painting
+        - Declares a global `std::vector<Artwork> GlobalGallery` that stores all artworks at runtime.
 
 2. **`managers.h`**
-   - Declares `ArtworkManager` and `EditorManager` classes.
-   - `ArtworkManager`: Handles fetching, cropping, filtering, and editing images.
-   - `EditorManager`: Manages UI-level editing interactions and state resets.
-   - Both classes work with OpenCV (`cv::Mat`) to process artwork images.
+   - **Purpose:** Declares `ArtworkManager` and `EditorManager` classes.
+   - **Classes:**
+        - `ArtworkManager`: Handles image retrieval, cropping, filtering, and rotation.
+        - `EditorManager`: Manages UI-level interactions, editing requests, and state resets.
 
 3. **`prado_editor.h`**
-   - Declares the `PradoEditor` class that inherits from `QMainWindow`.
-   - Connects to a UI layout file (`ui_PradoEditor`) to create the main application window.
-   - Does not contain business or image logic.
+   - **Purpose:** Declares the `PradoEditor` class that inherits from `QMainWindow`. Connects to a UI layout file (`ui_PradoEditor`) to create the main application window.
+   - **NOTE:** Does not contain business or image processing logic.
 
 4. **`image_scroll_gallery.h`**
-   - Defines the `ImageScrollGallery` class for displaying images in a scrollable Qt list view.
-   - Used primarily in earlier versions of the project (prior to moving to global gallery load).
-   - Supports dynamic image loading, geometry configuration, and scroll detection.
+   - **Purpose:** Defines the `ImageScrollGallery` class for displaying images in a scrollable Qt list view. Primary usage in development phase of the product before global gallery implementation.
+   - **Features:**
+      - Dynamic image loading
+      - Geometry configuration
+      - Scroll detection.
 
 5. **`image_cache.h`**
-   - Declares the `ImageCache` class to manage memory-efficient storage of artwork images.
-   - Provides `getCachedImage`, `addImage`, and `updateUsage` to implement a basic image cache.
-   - Although the scroll+cache approach was deprecated, this header remains for optional reactivation.
+   - **Purpose:** Declares the `ImageCache` class for memory-efficient image storage. 
+   - **Methods:**
+      - `getCachedImage`
+      - `addImage`
+      - `updateUsage` 
+   - **NOTE:** scroll+cache approach was deprecated in Version 1.0, this header remains for optional reactivation in later versions.
 
 ## Purpose:
 --------
-These headers separate interface from implementation. They enable clean modularization by:
+These headers separate interfaces from implementation to promote clean modularization by:
 - Isolating declarations (interfaces) from logic (in .cpp files),
-- Supporting easy unit testing and mocking,
-- Promoting reusability across GUI and image modules.
+- Supporting easy unit testing and mocking
+- Promoting reusability across GUI and image modules
 
+## Dependencies:
+--------
+The header files in this folder rely on the following libraries and components:
 
+### **OpenCV**
+Provides image processing functionality. cv::Mat is used for operations such as cropping, resizing, and filtering artwork images to maintain their resolution and bounds.
 
-Authors:
+### **Qt**
+Required for GUI components and image handling. Includes:
+- QMainWindow (in prado_editor.h) for the main application window.
+- QPixmap for efficient image representation and rendering in the UI.
+
+### **C++ Standard Library**
+Common containers and utilities:
+- <map>: For ordered key-value storage.
+- <unordered_map>: For hash-based key-value storage with faster lookups.
+- <list>: For managing dynamic collection of image cache.
+- <vector> and <string>: Widely used for storing artwork data and metadata.
+
+## Authors:
 --------
 Huiwen Jia, Lucas Giebler, Sarah Wood, Taro Welches
 For: MADR3081W
