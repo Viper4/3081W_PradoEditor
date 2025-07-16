@@ -1,45 +1,54 @@
-README.txt for include folder
+README.txt — Prado Editor Interfaces
 
-Directory Overview:
---------------------
-1. `artwork.h` / `artwork.cpp`
-   - Defines the `Artwork` struct to hold all image and metadata fields.
-   - Provides a global `GlobalGallery` for storing artwork data at runtime.
-   - Includes a helper for splitting subtitles into structured components.
+Overview:
+---------
+This document describes the header/interface files that define the core architecture of the Prado Editor project.
+These interfaces collectively describe how artwork data is managed, edited, and displayed in the application.
+They do not contain implementation logic — only declarations and structural design.
 
-2. `managers.h` / `EditorManager.cpp`
-   - Handles all image editing functionality:
-     * `applyFilter`, `cropImage`, `rotateImage`, and `resetImage`.
-   - Fetches images based on ID and integrates with OpenCV for transformations.
+Header Interfaces:
+------------------
 
-3. `image_scroll_gallery.h` / `.cpp`
-   - Manages the image viewing interface using Qt's `QListView`.
-   - (Deprecated in current setup) Initially supported infinite scroll + caching, but now disabled in favor of direct global loading.
+1. artwork.h
+   - Defines the `Artwork` struct representing a single art piece.
+   - Attributes include: title, author, image URL, subtitle, year, description, dimensions, and more.
+   - Also defines `SubtitleData`, a helper struct used to split the `subtitle` into:
+       • year
+       • medium
+       • dimensions
+   - Declares a global `std::vector<Artwork> GlobalGallery` that stores all artworks at runtime.
 
-4. `image_cache.h` / `.cpp`
-   - A shared utility for managing image memory through LRU caching.
-   - Can be re-enabled for future memory efficiency needs.
+2. managers.h
+   - Declares `ArtworkManager` and `EditorManager` classes.
+   - `ArtworkManager`: Handles fetching, cropping, filtering, and editing images.
+   - `EditorManager`: Manages UI-level editing interactions and state resets.
+   - Both classes work with OpenCV (`cv::Mat`) to process artwork images.
 
-5. `prado_editor.h` / `PradoEditor.cpp`
-   - Initializes the main window for the application and hooks up UI.
-   - Based on the `ui_PradoEditor` layout file.
+3. prado_editor.h
+   - Declares the `PradoEditor` class that inherits from `QMainWindow`.
+   - Connects to a UI layout file (`ui_PradoEditor`) to create the main application window.
+   - Does not contain business or image logic.
 
-6. `main.cpp`
-   - The application's entry point.
-   - Loads the smaller paintings dataset (50 entries).
-   - Initializes and prints the artwork gallery.
-   - Executes various test cases (image filters, sort logic, etc.).
-   - Launches the GUI.
+4. image_scroll_gallery.h
+   - Defines the `ImageScrollGallery` class for displaying images in a scrollable Qt list view.
+   - Used primarily in earlier versions of the project (prior to moving to global gallery load).
+   - Supports dynamic image loading, geometry configuration, and scroll detection.
 
-Important Notes:
------------------
-- The current data loader now properly handles quoted CSV fields, allowing commas inside text attributes like descriptions.
-- The entire scroll-based lazy loading system has been disabled in favor of a single global vector (`GlobalGallery`) that loads and displays all 50 artworks immediately.
-- Future work may reintroduce cache mechanisms or link this system to a PostgreSQL backend.
+5. image_cache.h
+   - Declares the `ImageCache` class to manage memory-efficient storage of artwork images.
+   - Provides `getCachedImage`, `addImage`, and `updateUsage` to implement a basic image cache.
+   - Although the scroll+cache approach was deprecated, this header remains for optional reactivation.
 
-Dependencies:
---------------
-- OpenCV (image manipulation)
-- Qt (GUI interface)
-- C++17+
+Purpose:
+--------
+These headers separate interface from implementation. They enable clean modularization by:
+- Isolating declarations (interfaces) from logic (in .cpp files),
+- Supporting easy unit testing and mocking,
+- Promoting reusability across GUI and image modules.
 
+
+
+Authors:
+--------
+Huiwen Jia, Lucas Giebler, Sarah Wood, Taro Welches
+For: MADR3081W
