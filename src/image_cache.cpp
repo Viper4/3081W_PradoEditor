@@ -11,7 +11,7 @@ void ImageCache::printUsageList(const std::string& label) {
 	// Purpose: Prints the usage list
 	// Parameters: string label - The label to print before the usage list
 	// Return Value: void
-	// Limitations:
+	// Limitations: 
     // -------------------
     std::cout << label;
     for (const auto& id : ImageCache::usageList) {
@@ -30,6 +30,10 @@ void ImageCache::updateUsage(const std::string& artworkId) {
     // std::cout << "Updating usage of " << artworkId << std::endl;
     // ImageCache::printUsageList("Before update: ");
 
+    // If the id is not in the map, do nothing
+    if (ImageCache::imageMap.find(artworkId) == ImageCache::imageMap.end()) {
+        return;
+    }
     ImageCache::usageList.remove(artworkId);
     ImageCache::usageList.push_front(artworkId);
 
@@ -42,7 +46,7 @@ void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
     // Parameters: string artworkId - The id of the artwork
     //             cv::Mat image - The image to associate with the id
     // Return Value: void
-    // Limitations:
+    // Limitations: Does no checking of artworkId or image, so invalid ids or images will be cached
     // -------------------
     std::cout << "Add image " << artworkId << " with image size " << image.size << std::endl;
 
@@ -58,7 +62,7 @@ cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
     // Purpose: Tries to retrieve an image from the cache using the artworkId
     // Parameters: string artworkId - The id of the artwork to retrieve its image
     // Return Value: cv::Mat
-    // Limitations: 
+    // Limitations: Returns empty cv::Mat if the image is not found
     // -------------------
     if (ImageCache::imageMap.find(artworkId) == ImageCache::imageMap.end()) {
         return cv::Mat();
@@ -72,7 +76,7 @@ QPixmap ImageCache::matToQPixmap(const cv::Mat& image) {
     // Purpose: Converts a cv::Mat to a QPixmap
     // Parameters: cv::Mat image - The image to convert
     // Return Value: QPixmap
-    // Limitations: 
+    // Limitations: Only supports CV_8UC1 and CV_8UC3
     // -------------------
     // Check if image is empty
     if (image.empty()) {

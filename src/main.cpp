@@ -48,7 +48,7 @@ static void printArtwork(const Artwork& art) {
     // Purpose: Print a few properties of the given Artwork
     // Parameters: Artwork art - artwork to print
     // Return Value: void
-    // Limitations: 
+    // Limitations: Expects Artwork to have at least id, work_title, author, subtitle, description, sheet_date, and image_url properties in metadata
     // -------------------
     std::cout << "\nArtwork " << art.metadata.at("id") << std::endl;
     std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
@@ -82,7 +82,7 @@ static std::string parseLine(std::stringstream& stream, std::string& line, char 
     //             const std::string& line - line to parse
 	//             char delimiter - delimiter to use
 	// Return Value: string
-	// Limitations: 
+	// Limitations: Expects the line to be in CSV format and to run this function one after another for each line
 	// -------------------
     std::getline(stream, line, delimiter); // Read up to the delimiter
     int i = 0;
@@ -156,36 +156,6 @@ int main(int argc, char* argv[])
 		art.metadata["sheet_ceca"] = parseLine(stream, line, ',');
 		art.metadata["sheet_autora"] = parseLine(stream, line, ','); // Redundant, same as author
 		art.metadata["sheet_production_place"] = parseLine(stream, line, ',');
-        /*std::getline(stream, art.metadata["work_url"], ',');
-        std::getline(stream, art.metadata["image_url"], ',');
-        std::getline(stream, art.metadata["author"], ',');
-        std::getline(stream, art.metadata["author_bio"], ',');
-        std::getline(stream, art.metadata["author_url"], ',');
-        std::getline(stream, art.metadata["author_id"], ',');
-        std::getline(stream, art.metadata["work_title"], ',');
-        std::getline(stream, art.metadata["subtitle"], ',');
-        std::getline(stream, art.metadata["work_exposed"], ','); // Where in the museum the artwork is
-        std::getline(stream, art.metadata["description"], ',');
-        std::getline(stream, art.metadata["work_tags"], ',');
-        std::getline(stream, art.metadata["id"], ','); // Catalog number is our ID
-        std::getline(stream, art.metadata["sheet_author"], ','); // Redundant, same as author
-		std::getline(stream, art.metadata["sheet_title"], ','); // Redundant, same as work_title
-		std::getline(stream, art.metadata["sheet_date"], ','); // Date when the artwork was created
-		std::getline(stream, art.metadata["sheet_technique"], ','); // Technique used to make the artwork
-		std::getline(stream, art.metadata["sheet_support"], ','); // What the artwork was made on for paintings (paper, canvas, etc.)
-		std::getline(stream, art.metadata["sheet_dimensions"], ',');
-		std::getline(stream, art.metadata["sheet_series"], ',');
-		std::getline(stream, art.metadata["sheet_origin"], ',');
-		std::getline(stream, art.metadata["bibliography"], ',');
-		std::getline(stream, art.metadata["inventory"], ',');
-		std::getline(stream, art.metadata["expositions"], ','); // Description of the signature for the artwork I think?
-		std::getline(stream, art.metadata["publication"], ',');
-		std::getline(stream, art.metadata["sheet_authors"], ',');
-		std::getline(stream, art.metadata["sheet_edition"], ',');
-        std::getline(stream, art.metadata["sheet_material"], ','); // Material of the artwork for non-paintings (bronze, stone, etc.)
-        std::getline(stream, art.metadata["sheet_ceca"], ',');
-		std::getline(stream, art.metadata["sheet_autora"], ','); // Redundant, same as author
-		std::getline(stream, art.metadata["sheet_production_place"], ',');*/
 
         // Replacing weird characters because of our python CSV cleaner
         for (auto& [key, value] : art.metadata) {
@@ -287,7 +257,7 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
     PradoEditor window;
     window.resize(1000, 600);
-    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, 500, 500, 10, 10, 1000, 3, 125, 150);
+    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, -500, -500, 10, 10, 1000, 3, 125, 150);
     window.show();
 
     return app.exec();

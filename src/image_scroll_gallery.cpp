@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QStringListModel>
 #include <include/image_cache.h>
+#include <include/managers.h>
 
 ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int numTotalImages, int imagesPerRow, int iconSize, int itemSize) {
 	// Contributors: Lucas Giebler
@@ -18,7 +19,7 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	//             float bufferY - the buffer between the edge of the gallery and the edge of the window
 	//             int imagesPerRow - the number of images per row
 	// Return Value: ImageScrollGallery
-	// Limitations: 
+	// Limitations: Does no checking for valid parameters so negative values will cause UI to not show
 	// -------------------
 	this->posX = x;
 	this->posY = y;
@@ -67,10 +68,15 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	// Return Value: void
 	// Limitations: 
 	// -------------------
+	if (firstIndex < 0 || lastIndex < 0 || firstIndex > lastIndex || lastIndex >= numTotalImages) {
+		std::cout << "Invalid index range: " << firstIndex << " to " << lastIndex << std::endl;
+		return;
+	}
+
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
 	for (int i = firstIndex; i < lastIndex + 1; i++) {
 		std::string artworkId = std::to_string(i);
-		cv::Mat image = ImageCache::getCachedImage(artworkId);
+		cv::Mat image = ArtworkManager::getImage(artworkId);
 		if (image.empty()) {
 			continue; // Skip empty images
 		}
