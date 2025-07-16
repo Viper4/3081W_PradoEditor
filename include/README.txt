@@ -43,12 +43,3 @@ Dependencies:
 - Qt (GUI interface)
 - C++17+
 
-Build System:
---------------
-This project assumes use of qmake or CMake depending on platform. Ensure OpenCV and Qt paths are configured correctly.
-
-Credits:
----------
-Contributors: Huiwen Jia, Lucas Giebler, Sarah Wood, Taro Welches
-Course: 3081W – Software Engineering Interfaces
-Institution: University of Minnesota
