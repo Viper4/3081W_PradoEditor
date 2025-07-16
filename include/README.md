@@ -1,12 +1,12 @@
-README.txt — Prado Editor Interfaces
+### README.txt — Prado Editor Interfaces
 
-Overview:
+## Overview:
 ---------
 This document describes the header/interface files that define the core architecture of the Prado Editor project.
 These interfaces collectively describe how artwork data is managed, edited, and displayed in the application.
 They do not contain implementation logic — only declarations and structural design.
 
-Header Interfaces:
+## Header Interfaces:
 ------------------
 
 1. artwork.h
@@ -39,7 +39,7 @@ Header Interfaces:
    - Provides `getCachedImage`, `addImage`, and `updateUsage` to implement a basic image cache.
    - Although the scroll+cache approach was deprecated, this header remains for optional reactivation.
 
-Purpose:
+## Purpose:
 --------
 These headers separate interface from implementation. They enable clean modularization by:
 - Isolating declarations (interfaces) from logic (in .cpp files),
