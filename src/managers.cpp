@@ -13,6 +13,11 @@
 Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
 {
     // Contributors: Huiwen Jia
+    // Purpose: Initialize a custom console UI for debugging
+    // Parameters: 
+    // Return Value: void
+    // Limitations: 
+    // -------------------
     // Loop over GlobalGallery to find the artwork by ID
     for (const auto& art : GlobalGallery) {
         if (art.metadata.at("id") == artworkId) {
@@ -32,6 +37,8 @@ cv::Mat ArtworkManager::getImage(const std::string& artworkId)
 	// Input: const std::string& artworkId
 	// Purpose: To get the image of an artwork by ID
 	// Return: cv::Mat image
+	// Limitations: 
+	// -------------------
     cv::Mat cachedResult = ImageCache::getCachedImage(artworkId);
 
     if (!cachedResult.empty()) {
@@ -53,6 +60,8 @@ cv::Mat ArtworkManager::applyFilter(const cv::Mat& image, const std::map<std::st
     // Input: const cv::Mat& image, const std::map<std::string, int>& params
     // Purpose: To apply a selected filter (grayscale, invert, blur) to the image
     // Return: Filtered cv::Mat image
+    // Limitations: 
+    // -------------------	
     if (!params.count("type"))
         return image.clone();
 
@@ -81,7 +90,8 @@ cv::Mat ArtworkManager::cropImage(const cv::Mat& image, const std::map<std::stri
     // Input: const cv::Mat& image, const std::map<std::string, int>& params
     // Purpose: To crop the image at specified position and size
     // Return: Cropped cv::Mat image
-
+    // Limitations: 
+    // -------------------	
     int x = params.at("x");
     int y = params.at("y");
     int width = params.at("width");
@@ -102,7 +112,8 @@ Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<s
     // Input: const std::string& artworkId, const std::map<std::string, int>& params
     // Purpose: To perform both cropping and filtering operations on the image
     // Return: Artwork object with the edited image
-
+    // Limitations: 
+    // -------------------	
     Artwork original = getArtworkByID(artworkId);
 
     cv::Mat image = cv::imread("images/" + artworkId + ".jpg");
@@ -131,9 +142,11 @@ cv::Mat ArtworkManager::rotateImage(const std::string& artworkId, double angle)
     // Contributors : Sarah and Taro
     // Purpose : rotate the image clockwise by the requested angle
     // Parameters :
-    // artworkID: a string that identifies a unique artpiece (str)
-    // angle: the angle in degrees to rotate the image by (double)
+    	// artworkID: a string that identifies a unique artpiece (str)
+    	// angle: the angle in degrees to rotate the image by (double)
     // Return Value: new_image: the newly rotated version of the image (Matrix)
+    // Limitations: 
+    // -------------------	
     cv::Mat src = cv::imread("images/" + artworkId + ".jpg");
     if (src.empty()) {
         throw std::runtime_error("Failed to load image for: " + artworkId);
@@ -164,6 +177,14 @@ cv::Mat ArtworkManager::rotateImage(const std::string& artworkId, double angle)
 
 void ArtworkManager::resetImage(const std::string& artworkId)
 {
+    // Contributors : Sarah and Taro
+    // Purpose : rotate the image clockwise by the requested angle
+    // Parameters :
+    	// artworkID: a string that identifies a unique artpiece (str)
+    	// angle: the angle in degrees to rotate the image by (double)
+    // Return Value: new_image: the newly rotated version of the image (Matrix)
+    // Limitations: 
+    // -------------------
     try {
         // Get the artwork metadata
         Artwork art = getArtworkByID(artworkId);
