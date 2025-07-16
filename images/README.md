@@ -1,4 +1,4 @@
-# README.md for images folder
+# README.md — Data (`/images` Folder)
 
 ## Contents
 1. **`smallerpaintings.csv`**
