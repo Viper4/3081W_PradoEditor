@@ -18,6 +18,7 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	//             float bufferY
 	//             int imagesPerRow
 	// Return Value: ImageScrollGallery
+	// Limitations: 
 	// -------------------
 	this->posX = x;
 	this->posY = y;
@@ -64,6 +65,7 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	// Parameters: int firstIndex
 	//             int lastIndex
 	// Return Value: void
+	// Limitations: 
 	// -------------------
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
 	for (int i = firstIndex; i < lastIndex + 1; i++) {
@@ -88,6 +90,7 @@ QPixmap ImageScrollGallery::fitPixmapToSize(const QPixmap& pixmap, int width, in
 	//             int height
 	//             bool keepAspectRatio
 	// Return Value: QPixmap
+	// Limitations: 
 	// -------------------
 	// Scale to icon size
 	QPixmap scaled;
@@ -115,6 +118,7 @@ void ImageScrollGallery::onScroll(int value) {
 	// Purpose: Runs every time the scroll view is scrolled and updates the images in the view
 	// Parameters: 
 	// Return Value: void
+	// Limitations: 
 	// -------------------
 	// Determine which image is at the top left of the scroll view by going down on the y axis step by step
 	int firstIndex = -1;
