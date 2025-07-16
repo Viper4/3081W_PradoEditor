@@ -60,11 +60,11 @@ The application separates concerns clearly:
 ## Dependencies
 The .cpp files rely on the following libraries and headers:
 
-### OpenCV
+### [OpenCV](https://opencv.org/)
 - Image processing and manipulation (`cv::Mat` for storing images).
 - Used extensively in managers.cpp for filtering, cropping, and transformations.
 
-### Qt
+### [Qt](https://www.qt.io/)
 - GUI framework for creating the application window and widgets via `QtWidgets/QApplication`.
 - `QMainWindow` in prado_editor.cpp and `QPixmap` for image rendering.
 
