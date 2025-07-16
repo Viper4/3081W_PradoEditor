@@ -48,7 +48,7 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
     case Artist:
         std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
-                return a.metadata.at("author") > b.metadata.at("author");
+                return a.metadata.at("author") < b.metadata.at("author");
             });
         break;
 	default:

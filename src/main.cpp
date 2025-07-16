@@ -42,20 +42,25 @@ static void initializeConsole() {
 #endif
 }
 
-static void printArtworkVector(const std::vector<Artwork>& vec, const std::string& label) {
+static void printArtwork(const Artwork& art) {
+    std::cout << "\nArtwork " << art.metadata.at("id") << std::endl;
+    std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
+    std::cout << " Author: " << art.metadata.at("author") << std::endl;
+    std::cout << " Subtitle: " << art.metadata.at("subtitle") << std::endl;
+    std::cout << " Description: " << art.metadata.at("description") << std::endl;
+    std::cout << " Year: " << art.metadata.at("sheet_date") << std::endl;
+    std::cout << " Image URL: " << art.metadata.at("image_url") << std::endl;
+}
+
+static void printArtworkVector(const std::vector<Artwork>& vec, const std::string& label, int count) {
     // Contributors: Lucas Giebler
 	// Purpose: Print the contents of the Artwork vector
 	// Parameters: const std::vector<Artwork>& vec
 	// Return Value: void
     std::cout << label << std::endl;
-    for (const auto& art : vec) {
-        std::cout << "Artwork " << art.metadata.at("id") << std::endl;
-        std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
-        std::cout << " Author: " << art.metadata.at("author") << std::endl;
-        std::cout << " Subtitle: " << art.metadata.at("subtitle") << std::endl;
-        std::cout << " Description: " << art.metadata.at("description") << std::endl;
-        std::cout << " Year: " << art.metadata.at("sheet_date") << std::endl;
-		std::cout << " Image URL: " << art.metadata.at("image_url") << std::endl;
+    for (int i = 0; i < min(count, vec.size()); i++) {
+        Artwork art = vec.at(i);
+        printArtwork(art);
     }
 	std::cout << "-------------------" << std::endl;
 }
@@ -65,7 +70,7 @@ int main(int argc, char* argv[])
     initializeConsole();
 
     // ------------------- LOAD CSV FILE -------------------
-    std::ifstream file("images/clean_smallerpaintings.csv");
+    std::ifstream file("images/clean_prado.csv");
     std::string line;
     std::getline(file, line); // Skip header
 
@@ -79,8 +84,6 @@ int main(int argc, char* argv[])
         std::stringstream stream(line);
         Artwork art;
         SubtitleData subtitle;
-
-        std::cout << "LINE: " << line << std::endl;
 
         // Headers are:
         // work_url,work_image_url,author,author_bio,author_url,author_id,work_title,work_subtitle,work_exposed,work_description,
@@ -131,9 +134,8 @@ int main(int argc, char* argv[])
 
         GlobalGallery.push_back(art);
         ++idcount;
-
-        printArtworkVector(GlobalGallery, "GlobalGallery");
     }
+    printArtworkVector(GlobalGallery, "GlobalGallery", 999999);
 
     std::cout << "Loaded " << GlobalGallery.size() << " artworks.\n";
 
@@ -176,7 +178,8 @@ int main(int argc, char* argv[])
     Artwork found = artworkManager.getArtworkByID(testId);
     if (!found.metadata.empty())
     {
-        std::cout << "Found artwork: " << found.metadata.at("work_title") << " by " << found.metadata.at("author") << std::endl;
+        std::cout << "Found artwork: " << std::endl;
+        printArtwork(found);
     }
     else
     {
@@ -199,16 +202,16 @@ int main(int argc, char* argv[])
 	std::cout << "\n[SortGlobalGallery] Test:\n";
 
 	pradoInterface.sortArtworks(SortCriteria::Title);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Title Sort----");
+    printArtworkVector(GlobalGallery, "----Artwork Gallery After Title Sort----", 5);
 
     pradoInterface.sortArtworks(SortCriteria::Newest);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Newest Sort----");
+    printArtworkVector(GlobalGallery, "----Artwork Gallery After Newest Sort----", 5);
 
     pradoInterface.sortArtworks(SortCriteria::Oldest);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Oldest Sort----");
+    printArtworkVector(GlobalGallery, "----Artwork Gallery After Oldest Sort----", 5);
 
     pradoInterface.sortArtworks(SortCriteria::Artist);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Artist Sort----");
+    printArtworkVector(GlobalGallery, "----Artwork Gallery After Artist Sort----", 5);
 
     // ------------------- IMAGE CACHE AND IMAGE SCROLL GALLERY UI -------------------
     // Initialize image cache with some images from 10 to 75
