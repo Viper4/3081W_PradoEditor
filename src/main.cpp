@@ -22,6 +22,7 @@ static void initializeConsole() {
     // Purpose: Initialize a custom console UI for debugging
     // Parameters: 
     // Return Value: void
+    // Limitations: 
     // -------------------
 #ifdef _WIN32
     AllocConsole();                   // Allocate a new console window
@@ -43,6 +44,12 @@ static void initializeConsole() {
 }
 
 static void printArtwork(const Artwork& art) {
+    // Contributors: Lucas Giebler
+    // Purpose: Initialize a custom console UI for debugging
+    // Parameters: 
+    // Return Value: void
+    // Limitations: 
+    // -------------------
     std::cout << "\nArtwork " << art.metadata.at("id") << std::endl;
     std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
     std::cout << " Author: " << art.metadata.at("author") << std::endl;
@@ -57,6 +64,7 @@ static void printArtworkVector(const std::vector<Artwork>& vec, const std::strin
 	// Purpose: Print the contents of the Artwork vector
 	// Parameters: const std::vector<Artwork>& vec
 	// Return Value: void
+	// Limitations: 
     std::cout << label << std::endl;
     for (int i = 0; i < min(count, vec.size()); i++) {
         Artwork art = vec.at(i);
@@ -67,6 +75,12 @@ static void printArtworkVector(const std::vector<Artwork>& vec, const std::strin
 
 int main(int argc, char* argv[])
 {
+    // Contributors: Lucas Giebler
+    // Purpose: Initialize a custom console UI for debugging
+    // Parameters: 
+    // Return Value: void
+    // Limitations: 
+    // -------------------
     initializeConsole();
 
     // ------------------- LOAD CSV FILE -------------------
@@ -232,6 +246,12 @@ int main(int argc, char* argv[])
 // Prepare dummy GlobalGallery for tests
 void setupDummyGallery()
 {
+    // Contributors: Lucas Giebler
+    // Purpose: Initialize a custom console UI for debugging
+    // Parameters: 
+    // Return Value: void
+    // Limitations: 
+    // -------------------
     GlobalGallery.clear();
 
     Artwork a1, a2, a3;
