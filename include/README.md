@@ -1,7 +1,7 @@
 ### README.md — Prado Editor Interfaces
 
 ## Overview:
----------
+
 This document describes the header files that define the core architecture of the Prado Editor project. These interfaces collectively describe how artwork data is managed, edited, and displayed in the application. They do not contain implementation logic—only declarations and structural design—for better maintainability and modularity.
 
 ## Header Interfaces:
