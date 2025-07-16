@@ -128,7 +128,7 @@ void ImageScrollGallery::onScroll(int value) {
 			break;
 		}
 	}
-	int visibleRows = height / itemSize; // Calculate visible rows based on how tall each item is and how tall the view is
+	int visibleRows = height / iconSize; // Calculate visible rows based on how tall each icon is and how tall the view is
 	int lastIndex = firstIndex + (visibleRows * imagesPerRow) - 1; // Each row has imagesPerRow images
 
 	std::cout << "Detected scroll starting at " << firstIndex << " to " << lastIndex << std::endl;

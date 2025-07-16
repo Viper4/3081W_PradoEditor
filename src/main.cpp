@@ -54,7 +54,7 @@ static void printArtwork(const Artwork& art) {
     std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
     std::cout << " Author: " << art.metadata.at("author") << std::endl;
     std::cout << " Subtitle: " << art.metadata.at("subtitle") << std::endl;
-    std::cout << " Description: " << art.metadata.at("description") << std::endl;
+    //std::cout << " Description: " << art.metadata.at("description") << std::endl;
     std::cout << " Year: " << art.metadata.at("sheet_date") << std::endl;
     std::cout << " Image URL: " << art.metadata.at("image_url") << std::endl;
 }
@@ -73,6 +73,23 @@ static void printArtworkVector(const std::vector<Artwork>& vec, const std::strin
         printArtwork(art);
     }
 	std::cout << "-------------------" << std::endl;
+}
+
+static std::string parseLine(std::stringstream& stream, std::string& line, char delimiter) {
+	// Contributors: Lucas Giebler
+	// Purpose: Parse a line of a CSV file and remove enclosing double quotes from CSV cell format
+    // Parameters: const std::stringstream& stream - stream to parse
+    //             const std::string& line - line to parse
+	//             char delimiter - delimiter to use
+	// Return Value: string
+	// Limitations: 
+	// -------------------
+    std::getline(stream, line, delimiter); // Read up to the delimiter
+    int i = 0;
+    while (i < line.length() && line[i] == '"' && line[line.length() - 1 - i] == '"') {
+        i++;
+    }
+    return line.substr(i, line.length() - 2 * i);
 }
 
 int main(int argc, char* argv[])
@@ -109,7 +126,37 @@ int main(int argc, char* argv[])
         // ubication,technical_sheet_autores,technical_sheet_edicion_/_estado,technical_sheet_materia,technical_sheet_ceca,technical_sheet_autora,
         // technical_sheet_lugar_de_produccion
 
-        std::getline(stream, art.metadata["work_url"], ',');
+        art.metadata["work_url"] = parseLine(stream, line, ',');
+        art.metadata["image_url"] = parseLine(stream, line, ',');
+		art.metadata["author"] = parseLine(stream, line, ',');
+        art.metadata["author_bio"] = parseLine(stream, line, ',');
+		art.metadata["author_url"] = parseLine(stream, line, ',');
+		art.metadata["author_id"] = parseLine(stream, line, ',');
+		art.metadata["work_title"] = parseLine(stream, line, ',');
+		art.metadata["subtitle"] = parseLine(stream, line, ',');
+		art.metadata["work_exposed"] = parseLine(stream, line, ','); // Where in the museum the artwork is
+		art.metadata["description"] = parseLine(stream, line, ',');
+		art.metadata["work_tags"] = parseLine(stream, line, ',');
+		art.metadata["id"] = parseLine(stream, line, ','); // Catalog number is our ID
+		art.metadata["sheet_author"] = parseLine(stream, line, ','); // Redundant, same as author
+		art.metadata["sheet_title"] = parseLine(stream, line, ','); // Redundant, same as work_title
+        art.metadata["sheet_date"] = parseLine(stream, line, ','); // Date when the artwork was created
+		art.metadata["sheet_technique"] = parseLine(stream, line, ','); // Technique used to make the artwork
+		art.metadata["sheet_support"] = parseLine(stream, line, ','); // What the artwork was made on for paintings (paper, canvas, etc.)
+		art.metadata["sheet_dimensions"] = parseLine(stream, line, ',');
+		art.metadata["sheet_series"] = parseLine(stream, line, ',');
+		art.metadata["sheet_origin"] = parseLine(stream, line, ',');
+        art.metadata["bibliography"] = parseLine(stream, line, ',');
+		art.metadata["inventory"] = parseLine(stream, line, ',');
+		art.metadata["expositions"] = parseLine(stream, line, ','); // Description of the signature for the artwork I think?
+		art.metadata["publication"] = parseLine(stream, line, ',');
+		art.metadata["sheet_authors"] = parseLine(stream, line, ','); // Multiple authors
+		art.metadata["sheet_edition"] = parseLine(stream, line, ',');
+		art.metadata["sheet_material"] = parseLine(stream, line, ','); // Material of the artwork for non-paintings (bronze, stone, etc.)
+		art.metadata["sheet_ceca"] = parseLine(stream, line, ',');
+		art.metadata["sheet_autora"] = parseLine(stream, line, ','); // Redundant, same as author
+		art.metadata["sheet_production_place"] = parseLine(stream, line, ',');
+        /*std::getline(stream, art.metadata["work_url"], ',');
         std::getline(stream, art.metadata["image_url"], ',');
         std::getline(stream, art.metadata["author"], ',');
         std::getline(stream, art.metadata["author_bio"], ',');
@@ -138,7 +185,7 @@ int main(int argc, char* argv[])
         std::getline(stream, art.metadata["sheet_material"], ','); // Material of the artwork for non-paintings (bronze, stone, etc.)
         std::getline(stream, art.metadata["sheet_ceca"], ',');
 		std::getline(stream, art.metadata["sheet_autora"], ','); // Redundant, same as author
-		std::getline(stream, art.metadata["sheet_production_place"], ',');
+		std::getline(stream, art.metadata["sheet_production_place"], ',');*/
 
         // Replacing weird characters because of our python CSV cleaner
         for (auto& [key, value] : art.metadata) {
