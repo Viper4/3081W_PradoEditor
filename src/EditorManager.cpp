@@ -146,6 +146,7 @@ cv::Mat ArtworkManager::rotateImage(const std::string &artworkId, double angle)
 
 
 void EditorManager::resetImage(const std::string &artworkId)
+// Contributors : Sarah, Taro and Huiwen
 {
     try {
         // Get the artwork metadata
