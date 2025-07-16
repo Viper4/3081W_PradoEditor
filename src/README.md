@@ -76,7 +76,7 @@ The .cpp files rely on the following libraries and headers:
 - `<iostream>`: Console output for debugging.
 - `<regex>`: Regular expression parsing (used for text or subtitle data processing).
 
-  ## Authors
-  Huiwen Jia, Lucas Gieber, Sarah Wood, Taro Welches
+## Authors
+Huiwen Jia, Lucas Gieber, Sarah Wood, Taro Welches
   
-  From: MADR 3081W
+From: MADR 3081W
