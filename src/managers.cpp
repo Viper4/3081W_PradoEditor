@@ -7,6 +7,7 @@
 #include <include/artwork.h>
 #include <opencv2/core/types.hpp>      // for cv::Point2f and cv::RotatedRect
 #include <opencv2/imgproc.hpp>         // for getRotationMatrix2D, warpAffine
+#include <include/image_cache.h>
 
 
 Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
@@ -14,22 +15,36 @@ Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
     // Contributors: Huiwen Jia
     // Loop over GlobalGallery to find the artwork by ID
     for (const auto& art : GlobalGallery) {
-        if (art.id == artworkId) {
-            // Try to load the image from disk
-            cv::Mat img = cv::imread("images/" + artworkId + ".jpg");
-            if (img.empty()) {
-                throw std::runtime_error("Image file not found for artwork ID: " + artworkId);
-            }
-
+        if (art.metadata.at("id") == artworkId) {
             // Construct and return artwork object with image
             Artwork result = art;
-            result.image = img;  // Assuming you added cv::Mat image; field in Artwork
             return result;
         }
     }
 
     std::cout << "Artwork ID not found: " << artworkId << std::endl;
     return Artwork();
+}
+
+cv::Mat ArtworkManager::getImage(const std::string& artworkId)
+{
+	// Contributors: Lucas Giebler
+	// Input: const std::string& artworkId
+	// Purpose: To get the image of an artwork by ID
+	// Return: cv::Mat image
+    cv::Mat cachedResult = ImageCache::getCachedImage(artworkId);
+
+    if (!cachedResult.empty()) {
+        return cachedResult;
+    }
+
+    for (const auto& art : GlobalGallery) {
+		if (art.metadata.at("id") == artworkId) {
+            // TODO: Send curl request to download image from image_url
+            art.metadata.at("image_url");
+            return cv::Mat();
+		}
+	}
 }
 
 cv::Mat ArtworkManager::applyFilter(const cv::Mat& image, const std::map<std::string, int>& params)
@@ -75,7 +90,8 @@ cv::Mat ArtworkManager::cropImage(const cv::Mat& image, const std::map<std::stri
     if (x < 0 || y < 0 || width <= 0 || height <= 0 ||
         x + width > image.cols || y + height > image.rows)
     {
-        throw std::out_of_range("Crop area is out of bounds.");
+        std::cout << "WARNING: Crop area is out of bounds." << std::endl;
+        return image.clone();
     }
     return image(cv::Rect(x, y, width, height)).clone();
 }
@@ -105,7 +121,7 @@ Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<s
     }
 
     Artwork edited = original;
-    edited.image = image;
+    //edited.image = image;
     return edited;
 
 }

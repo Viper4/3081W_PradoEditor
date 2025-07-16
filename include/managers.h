@@ -13,6 +13,8 @@ public:
 
     Artwork getArtworkByID(const std::string& artworkId);
 
+    cv::Mat getImage(const std::string& artworkId);
+
     cv::Mat applyFilter(const cv::Mat& image, const std::map<std::string, int>& params);
 
     cv::Mat cropImage(const cv::Mat& image, const std::map<std::string, int>& params);

@@ -30,25 +30,25 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
     case Title:
         std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
-                return a.title < b.title;
+                return a.metadata.at("work_title") < b.metadata.at("work_title");
             });
         break;
     case Newest:
         std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
-                return a.year > b.year;
+                return a.metadata.at("sheet_date") > b.metadata.at("sheet_date");
             });
         break;
     case Oldest:
         std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
-                return a.year < b.year;
+                return a.metadata.at("sheet_date") < b.metadata.at("sheet_date");
             });
         break;
     case Artist:
         std::sort(GlobalGallery.begin(), GlobalGallery.end(), 
             [](const Artwork& a, const Artwork& b) {
-                return a.author > b.author;
+                return a.metadata.at("author") > b.metadata.at("author");
             });
         break;
 	default:
@@ -63,6 +63,7 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
     // Purpose : split the given string subtitle description into a struct containing separate year, medium, and dimensions
     // Parameters : work_subtitle: the original subtitle field in paragraph form
     // Return Value: subtitle: a struct of the original subtitle field
+    // NOTE: We no longer need this function since there are already columns in the dataset for year, technique, and dimensions
     SubtitleData subtitle;
     std::regex pattern(R"(([^.]*)\. ([^,]*), (.*))");
     std::smatch matches;
@@ -80,24 +81,6 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
     else {
         std::cerr << "No match found for subtitle: " << work_subtitle << std::endl;
     }
-
-    /*size_t dotPos = work_subtitle.find('.');
-
-    for (size_t i = 0; i < dotPos; i++)
-    {
-        if (isdigit(prefix[i]) && isdigit(prefix[i + 1]) &&
-            isdigit(prefix[i + 2]) && isdigit(prefix[i + 3]))
-        {
-            subtitle.year = prefix.substr(i, 4);
-            break;
-        }
-    }
-
-    size_t medPos = work_subtitle.find(',');
-    std::string medium = work_subtitle.substr(yrPos + 1, medPos - yrPos - 1);
-    subtitle.medium = std::string(trim(medium));
-
-    subtitle.dimensions = trim(work_subtitle.substr(medPos + 1));*/
 
     return subtitle;
 }

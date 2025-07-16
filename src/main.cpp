@@ -9,6 +9,7 @@
 #include <QtWidgets/QApplication>
 #include <include/image_cache.h>
 #include <include/image_scroll_gallery.h>
+#include <QVBoxLayout>
 
 std::vector<Artwork> GlobalGallery;
 
@@ -48,13 +49,13 @@ static void printArtworkVector(const std::vector<Artwork>& vec, const std::strin
 	// Return Value: void
     std::cout << label << std::endl;
     for (const auto& art : vec) {
-        std::cout << "Artwork " << art.id << std::endl;
-        std::cout << " Title: " << art.title << std::endl;
-        std::cout << " Author: " << art.author << std::endl;
-        std::cout << " Subtitle: " << art.subtitle << std::endl;
-        std::cout << " Description: " << art.description << std::endl;
-        std::cout << " Year: " << art.year << std::endl;
-		std::cout << " Image URL: " << art.image_url << std::endl;
+        std::cout << "Artwork " << art.metadata.at("id") << std::endl;
+        std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
+        std::cout << " Author: " << art.metadata.at("author") << std::endl;
+        std::cout << " Subtitle: " << art.metadata.at("subtitle") << std::endl;
+        std::cout << " Description: " << art.metadata.at("description") << std::endl;
+        std::cout << " Year: " << art.metadata.at("sheet_date") << std::endl;
+		std::cout << " Image URL: " << art.metadata.at("image_url") << std::endl;
     }
 	std::cout << "-------------------" << std::endl;
 }
@@ -88,32 +89,46 @@ int main(int argc, char* argv[])
         // ubication,technical_sheet_autores,technical_sheet_edicion_/_estado,technical_sheet_materia,technical_sheet_ceca,technical_sheet_autora,
         // technical_sheet_lugar_de_produccion
 
-        std::getline(stream, art.image_url, ',');
-        std::getline(stream, art.author, ',');
-        std::getline(stream, art.title, ',');
-        std::getline(stream, art.subtitle, ',');
-        std::getline(stream, art.description, ',');
-        std::getline(stream, art.id, ','); // Use catalog ID
+        std::getline(stream, art.metadata["work_url"], ',');
+        std::getline(stream, art.metadata["image_url"], ',');
+        std::getline(stream, art.metadata["author"], ',');
+        std::getline(stream, art.metadata["author_bio"], ',');
+        std::getline(stream, art.metadata["author_url"], ',');
+        std::getline(stream, art.metadata["author_id"], ',');
+        std::getline(stream, art.metadata["work_title"], ',');
+        std::getline(stream, art.metadata["subtitle"], ',');
+        std::getline(stream, art.metadata["work_exposed"], ',');
+        std::getline(stream, art.metadata["description"], ',');
+        std::getline(stream, art.metadata["work_tags"], ',');
+        std::getline(stream, art.metadata["id"], ','); // Catalog number is our ID
+        std::getline(stream, art.metadata["sheet_author"], ','); // Redundant, same as author
+		std::getline(stream, art.metadata["sheet_title"], ','); // Redundant, same as work_title
+		std::getline(stream, art.metadata["sheet_date"], ',');
+		std::getline(stream, art.metadata["sheet_technique"], ',');
+		std::getline(stream, art.metadata["sheet_support"], ',');
+		std::getline(stream, art.metadata["sheet_dimensions"], ',');
+		std::getline(stream, art.metadata["sheet_series"], ',');
+		std::getline(stream, art.metadata["sheet_origin"], ',');
+		std::getline(stream, art.metadata["bibliography"], ',');
+		std::getline(stream, art.metadata["inventory"], ',');
+		std::getline(stream, art.metadata["expositions"], ',');
+		std::getline(stream, art.metadata["ubication"], ',');
+		std::getline(stream, art.metadata["sheet_authors"], ',');
+		std::getline(stream, art.metadata["sheet_edition"], ',');
+        std::getline(stream, art.metadata["sheet_material"], ',');
+        std::getline(stream, art.metadata["sheet_ceca"], ',');
+		std::getline(stream, art.metadata["sheet_autora"], ','); // Redundant, same as author
+		std::getline(stream, art.metadata["sheet_production_place"], ',');
 
         // Replacing weird characters because of our python CSV cleaner
-        // Replace | with ,
-        std::replace(art.image_url.begin(), art.image_url.end(), '|', ',');
-        std::replace(art.author.begin(), art.author.end(), '|', ',');
-		std::replace(art.title.begin(), art.title.end(), '|', ',');
-		std::replace(art.subtitle.begin(), art.subtitle.end(), '|', ',');
-		std::replace(art.description.begin(), art.description.end(), '|', ',');
-        std::replace(art.id.begin(), art.id.end(), '|', ',');
+        for (auto& [key, value] : art.metadata) {
+            // Replace | with ,
+			std::replace(value.begin(), value.end(), '|', ',');
 
-        // Replace ~ with "
-        std::replace(art.image_url.begin(), art.image_url.end(), '~', '"');
-        std::replace(art.author.begin(), art.author.end(), '~', '"');
-        std::replace(art.title.begin(), art.title.end(), '~', '"');
-        std::replace(art.subtitle.begin(), art.subtitle.end(), '~', '"');
-        std::replace(art.description.begin(), art.description.end(), '~', '"');
-        std::replace(art.id.begin(), art.id.end(), '~', '"');
+			// Replace ~ with "
+			std::replace(value.begin(), value.end(), '~', '"');
+        }
 
-        subtitle = pradoInterface.splitSubtitle(art.subtitle);
-        art.year = subtitle.year;
         GlobalGallery.push_back(art);
         ++idcount;
 
@@ -123,17 +138,23 @@ int main(int argc, char* argv[])
     std::cout << "Loaded " << GlobalGallery.size() << " artworks.\n";
 
     // ------------------- APPLY FILTER -------------------
+    cv::Mat test_image = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
+
     std::cout << "\n[ApplyFilter] Test: grayscale\n";
-    cv::Mat colorImg = cv::Mat::ones(10, 10, CV_8UC3) * 255;
     std::map<std::string, int> grayscaleParams = { {"type", 1} };
-    cv::Mat grayImg = artworkManager.applyFilter(colorImg, grayscaleParams);
-    std::cout << "Channels after grayscale: " << grayImg.channels() << " (Expected: 1)\n";
+    cv::Mat grayImg = artworkManager.applyFilter(test_image, grayscaleParams);
+    ImageCache::addImage("0", test_image);
+    ImageCache::addImage("1", grayImg);
 
     std::cout << "\n[ApplyFilter] Test: invert\n";
-    cv::Mat blackImg = cv::Mat::zeros(10, 10, CV_8UC1);
     std::map<std::string, int> invertParams = { {"type", 2} };
-    cv::Mat whiteImg = artworkManager.applyFilter(blackImg, invertParams);
-    std::cout << "Pixel[0,0] after invert: " << static_cast<int>(whiteImg.at<uchar>(0, 0)) << " (Expected: 255)\n";
+    cv::Mat invertedImg = artworkManager.applyFilter(test_image, invertParams);
+    ImageCache::addImage("2", invertedImg);
+
+    std::cout << "\n[ApplyFilter] Test: blur\n";
+    std::map<std::string, int> blurParams = { {"type", 3} };
+    cv::Mat blurredImg = artworkManager.applyFilter(test_image, blurParams);
+    ImageCache::addImage("3", blurredImg);
 
     // ------------------- CROP IMAGE -------------------
     std::cout << "\n[CropImage] Test: crop 5x5\n";
@@ -151,22 +172,22 @@ int main(int argc, char* argv[])
 
     // ------------------- GET ARTWORK BY ID -------------------
     std::cout << "\n[GetArtworkByID] Test: lookup by ID\n";
-    std::string testId = "art001"; // must exist in your CSV
+    std::string testId = "P002073"; // must exist in your CSV
     Artwork found = artworkManager.getArtworkByID(testId);
-    if (!found.title.empty())
+    if (!found.metadata.empty())
     {
-        std::cout << "Found artwork: " << found.title << " by " << found.author << "\n";
+        std::cout << "Found artwork: " << found.metadata.at("work_title") << " by " << found.metadata.at("author") << std::endl;
     }
     else
     {
-        std::cout << "Artwork ID '" << testId << "' not found.\n";
+        std::cout << "Artwork ID '" << testId << "' not found." << std::endl;
     }
 
     // ------------------- SPLIT SUBTITLE -------------------
     std::cout << "\n[SplitSubtitle] Test:\n";
     if (!GlobalGallery.empty())
     {
-        std::string subtitleText = GlobalGallery[0].subtitle;
+        std::string subtitleText = GlobalGallery[0].metadata.at("subtitle");
         SubtitleData parsed = pradoInterface.splitSubtitle(subtitleText);
         std::cout << "Subtitle: " << subtitleText << "\n";
         std::cout << "Parsed year: " << parsed.year << "\n";
@@ -190,15 +211,16 @@ int main(int argc, char* argv[])
     printArtworkVector(GlobalGallery, "----Artwork Gallery After Artist Sort----");
 
     // ------------------- IMAGE CACHE AND IMAGE SCROLL GALLERY UI -------------------
-    QApplication app(argc, argv);
-    PradoEditor window;
+    // Initialize image cache with some images from 10 to 75
     cv::Mat temp_image = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\Absolute Cinema.jpg");
-    for (int i = 10; i < 75; i++) {
+    for (int i = 10; i < 50; i++) {
         ImageCache::addImage(std::to_string(i), temp_image);
     }
 
-    ImageScrollGallery gallery = ImageScrollGallery(&window, 0, 0, 500, 500, 10, 10, 1000, 3, 125, 150);
-
+    QApplication app(argc, argv);
+    PradoEditor window;
+    window.resize(1000, 600);
+    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, 500, 500, 10, 10, 1000, 3, 125, 150);
     window.show();
 
     return app.exec();
@@ -210,20 +232,20 @@ void setupDummyGallery()
     GlobalGallery.clear();
 
     Artwork a1, a2, a3;
-    a1.id = "001";
-    a1.title = "Title A";
-    a1.author = "Artist Z";
-    a1.year = "2000";
+    a1.metadata.at("id") = "001";
+    a1.metadata.at("work_title") = "Title A";
+    a1.metadata.at("author") = "Artist Z";
+    a1.metadata.at("sheet_date") = "2000";
 
-    a2.id = "002";
-    a2.title = "Title B";
-    a2.author = "Artist Y";
-    a2.year = "1995";
+    a2.metadata.at("id") = "002";
+    a2.metadata.at("work_title") = "Title B";
+    a2.metadata.at("author") = "Artist Y";
+    a2.metadata.at("sheet_date") = "1995";
 
-    a3.id = "003";
-    a3.title = "Title C";
-    a3.author = "Artist X";
-    a3.year = "2020";
+    a3.metadata.at("id") = "003";
+    a3.metadata.at("work_title") = "Title C";
+    a3.metadata.at("author") = "Artist X";
+    a3.metadata.at("sheet_date") = "2020";
 
     GlobalGallery = {a1, a2, a3};
 }

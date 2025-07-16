@@ -29,6 +29,7 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	this->imagesPerRow = imagesPerRow;
 	this->numRows = numTotalImages / imagesPerRow;
 
+	// Initializing list view
 	this->listView = new QListView(parent);
 	this->listView->setGeometry(x + bufferX, y + bufferY, width, height);
 
@@ -42,9 +43,6 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	this->iconSize = iconSize;
 	this->itemSize = itemSize;
 
-	// Calculate and fix the width of the list view to simulate fixed columns
-	//this->listView->setFixedWidth(imagesPerRow * itemSize + (imagesPerRow - 1) * this->listView->spacing());
-
 	// Add onScroll function as listener to scroll bar
 	connect(listView->verticalScrollBar(), &QScrollBar::valueChanged, this, &ImageScrollGallery::onScroll);
 
@@ -52,14 +50,13 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	QStandardItemModel* model = new QStandardItemModel(this);
 	this->listView->setModel(model);
 	QPixmap pixmap("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
+	QIcon placeholderIcon(pixmap);
 	for (int i = 0; i < numTotalImages; i++) {
-		QStandardItem* item = new QStandardItem(QIcon(pixmap), "Placeholder " + QString::number(i));
+		QStandardItem* item = new QStandardItem(placeholderIcon, "Placeholder " + QString::number(i));
 		item->setTextAlignment(Qt::AlignCenter);
 		model->appendRow(item);
 	}
 }
-
-
 
 void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	// Contributors: Lucas Giebler
@@ -68,21 +65,30 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	//             int lastIndex
 	// Return Value: void
 	// -------------------
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
 	for (int i = firstIndex; i < lastIndex + 1; i++) {
 		std::string artworkId = std::to_string(i);
 		cv::Mat image = ImageCache::getCachedImage(artworkId);
 		if (image.empty()) {
-			continue;
+			continue; // Skip empty images
 		}
+		// Create new item using loaded image
 		QPixmap pixmap = fitPixmapToSize(ImageCache::matToQPixmap(image), iconSize, iconSize, true);
 		QStandardItem* item = new QStandardItem(QIcon(pixmap), "Photo " + QString::number(i));
 		item->setTextAlignment(Qt::AlignCenter);
-		QModelIndex index = listView->model()->index(i, 0);
-		listView->model()->setData(index, pixmap, Qt::DecorationRole);
+		model->setItem(i, 0, item); // Replace item with loaded item
 	}
 }
 
 QPixmap ImageScrollGallery::fitPixmapToSize(const QPixmap& pixmap, int width, int height, bool keepAspectRatio) {
+	// Contributors: Lucas Giebler
+	// Purpose: Scales a pixmap to fit a given width and height
+	// Parameters: QPixmap pixmap
+	//             int width
+	//             int height
+	//             bool keepAspectRatio
+	// Return Value: QPixmap
+	// -------------------
 	// Scale to icon size
 	QPixmap scaled;
 	if (keepAspectRatio) {
@@ -98,6 +104,7 @@ QPixmap ImageScrollGallery::fitPixmapToSize(const QPixmap& pixmap, int width, in
 		scaled = cropped.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 	}
 	else {
+		// Ignore aspect ratio (stretched to fit)
 		scaled = pixmap.scaled(width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 	}
 	return scaled;
@@ -109,22 +116,18 @@ void ImageScrollGallery::onScroll(int value) {
 	// Parameters: 
 	// Return Value: void
 	// -------------------
-	//QPoint topLeft = listView->viewport()->rect().topLeft();
-	//QPoint bottomRight = listView->viewport()->rect().bottomRight();
-
-	//int firstIndex = listView->indexAt(topLeft).row();
-	//int lastIndex = listView->indexAt(bottomRight).row();
+	// Determine which image is at the top left of the scroll view by going down on the y axis step by step
 	int firstIndex = -1;
 	for (int i = 0; i < itemSize; i++) {
-		firstIndex = listView->indexAt(QPoint(posX + bufferX, posY + bufferY + i)).row();
-		if (firstIndex != -1) {
+		firstIndex = listView->indexAt(QPoint(posX + bufferX, posY + bufferY + i)).row()-1;
+		if (firstIndex > -1) {
 			break;
 		}
 	}
-	int visibleRows = height / itemSize;
-	int lastIndex = firstIndex + (visibleRows * imagesPerRow) - 1;
+	int visibleRows = height / itemSize; // Calculate visible rows based on how tall each item is and how tall the view is
+	int lastIndex = firstIndex + (visibleRows * imagesPerRow) - 1; // Each row has imagesPerRow images
 
 	std::cout << "Detected scroll starting at " << firstIndex << " to " << lastIndex << std::endl;
 
-	loadImagesInView(firstIndex, lastIndex);
+	loadImagesInView(firstIndex, lastIndex); // Load all iamges from firstIndex to lastIndex into the scroll view
 }

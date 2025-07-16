@@ -2,7 +2,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-int ImageCache::maxImages = 50;
+int ImageCache::maxImages = 50; // Maximum number of images to cache
 std::list<std::string> ImageCache::usageList; // Most recently used id will be at the front of the list
 std::unordered_map<std::string, cv::Mat> ImageCache::imageMap; // Mat is OpenCV's matrix object to represent an image
 
@@ -25,7 +25,6 @@ void ImageCache::updateUsage(const std::string& artworkId) {
     // Parameters: string artworkId
     // Return Value: void
     // -------------------
-    
     //std::cout << "Updating usage of " << artworkId << std::endl;
     //ImageCache::printUsageList("Before update: ");
 
@@ -72,13 +71,25 @@ QPixmap ImageCache::matToQPixmap(const cv::Mat& image) {
     // -------------------
     // Check if image is empty
     if (image.empty()) {
-        std::cerr << "Empty image" << std::endl;
+        std::cout << "WARNING: Converting empty image to QPixmap" << std::endl;
         return QPixmap();
     }
 
-    // Convert the cv::Mat to QImage
+    // Convert the cv::Mat to QImage and then to QPixmap
     QImage qimage;
-    QPixmap pixmap = QPixmap::fromImage(QImage((unsigned char*)image.data, image.cols, image.rows, QImage::Format_RGB888));
-
-    return pixmap;
+    cv::Mat rgb;
+    switch (image.type()) {
+    case CV_8UC1: // Grayscale
+        qimage = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_Grayscale8);
+        break;
+    case CV_8UC3: // Color BGR
+        // OpenCV uses BGR, but Qt expects RGB
+        cv::cvtColor(image, rgb, cv::COLOR_BGR2RGB);
+        qimage = QImage(rgb.data, rgb.cols, rgb.rows, rgb.step, QImage::Format_RGB888);
+        break;
+    default:
+        std::cerr << "Unsupported image type for conversion: " << image.type() << std::endl;
+        return QPixmap();
+    }
+    return QPixmap::fromImage(qimage.copy()); // copy to detach from OpenCV data
 }

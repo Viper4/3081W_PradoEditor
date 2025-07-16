@@ -7,7 +7,7 @@
 #include <opencv2/core.hpp>
 #include <QListView>
 
-class ImageScrollGallery : public QObject {
+class ImageScrollGallery : public QWidget {
 private:
 	QListView* listView;
 	float posX;

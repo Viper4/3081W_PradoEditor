@@ -11,24 +11,9 @@ struct Artwork
     // technical_sheet_soporte,technical_sheet_dimension,technical_sheet_serie,technical_sheet_procedencia,bibliography,inventory,expositions,
     // ubication,technical_sheet_autores,technical_sheet_edicion_/_estado,technical_sheet_materia,technical_sheet_ceca,technical_sheet_autora,
     // technical_sheet_lugar_de_produccion
-    std::string id;
-    cv::Mat image;
-    std::string work_url;
-    std::string image_url;
-    std::string author;
-    std::string author_bio;
-	std::string author_url;
-	std::string author_id;
-    std::string title;
-    std::string subtitle;
-	std::string work_exposed;
-    std::string description;
-	std::string year;
-
+    std::unordered_map<std::string, std::string> metadata;
 
     Artwork() = default;
-    Artwork(const std::string &id, const cv::Mat &img)
-        : id(id), image(img) {}
 };
 
 extern std::vector<Artwork> GlobalGallery;
