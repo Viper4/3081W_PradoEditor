@@ -7,7 +7,7 @@
 
 std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery()
 {
-    // What are we doing here? Just copying the GlobalGallery??
+    // RESOLVE: What are we doing here? Just copying the GlobalGallery??
 
     /*std::vector<Artwork> result;
     result = GlobalGallery;
@@ -22,9 +22,10 @@ std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery()
 void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
 {
     // Contributors: Taro Welches and Lucas Giebler
-    // Input: const std::string& criteria
     // Purpose: To sort the displayed artwork by a certain criteria input by user
-    // return: none
+    // Parameters: const std::string& criteria
+    // Return: None
+    // Limitations: 
 
     switch (criteria) {
     case Title:
@@ -63,6 +64,8 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
     // Purpose : split the given string subtitle description into a struct containing separate year, medium, and dimensions
     // Parameters : work_subtitle: the original subtitle field in paragraph form
     // Return Value: subtitle: a struct of the original subtitle field
+    // Limitations: 
+	
     // NOTE: We no longer need this function since there are already columns in the dataset for year, technique, and dimensions
     SubtitleData subtitle;
     std::regex pattern(R"(([^.]*)\. ([^,]*), (.*))");
@@ -86,6 +89,12 @@ SubtitleData PradoEditorMobileInterface::splitSubtitle(const std::string &work_s
 }
 
 cv::Mat getImage(const std::string &artworkId)
+    // Contributors : 
+    // Purpose : 
+    // Parameters : 
+    // Return Value: 
+	// ::param artworkID: 
+    // Limitations: 
 {
     std::cout << "make some sort of call to getimagecache and then error handle\n";
     return cv::Mat();
