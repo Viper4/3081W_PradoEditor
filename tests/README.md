@@ -9,13 +9,13 @@ This folder contains Google Test (`GTest`) unit tests for the Prado Editor appli
 1. **`testing.cpp`**
 -**Purpose:** Implements test cases using GTest to validate:
    - Artwork Retrieval
-      - getArtworkDescription() — Confirms correct description retrieval by ID.
-      - getArtworkByID() — Tests image loading for a given artwork ID.
+      - `getArtworkDescription()`: Confirms correct description retrieval by ID.
+      - `getArtworkByID()`: Tests image loading for a given artwork ID.
    - Image Editing & Filters
-      - applyFilter() — Ensures grayscale and invert filters apply correctly.
-      - cropImage() — Tests cropping with valid and out-of-bounds coordinates.
-      - editImage() — Applies multiple edits (crop + filter) in a single operation.
-      - rotateImage() — Verifies image rotation works without errors.
+      - `applyFilter()`: Ensures grayscale and invert filters apply correctly.
+      - `cropImage()`: Tests cropping with valid and out-of-bounds coordinates.
+      - `editImage()`: Applies multiple edits (crop + filter) in a single operation.
+      - `rotateImage()`: Verifies image rotation works without errors.
     - Gallery Operations
       - Sorting by Newest and Artist.
       - Handling of invalid sorting criteria without exceptions.
@@ -40,18 +40,23 @@ The test layer requires:
 - [Qt](Qt): Required indirectly for project components under test.
 
 ### C++ Standard Library
-- <iostream>: Debugging output.
-- <map>: Parameter handling for image operations.
+- `<iostream>`: Debugging output.
+- `<map>`: Parameter handling for image operations.
 
 ## Executing the Program
 
 Enable testing using the CMake (`CMakeLists.txt` file).
 
 ### Build and Run:
-`mkdir build && cd build
-cmake ..
-make
-ctest --verbose`
+<pre> ```
+   mkdir build && cd build
+   
+   cmake ..
+   
+   make
+   
+   ctest --verbose
+``` </pre>
 
 ## Authors
 Huiwen Jia, Lucas Gieber, Sarah Wood, Taro Welches
