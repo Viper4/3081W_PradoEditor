@@ -1,16 +1,5 @@
 README.txt for include folder
 
-
-
-Main Features:
----------------
-- Load artwork metadata and images from a CSV file.
-- Store metadata in a global `std::vector<Artwork>` for easy access and sorting.
-- Display images in a scrollable Qt-based gallery (image_scroll_gallery.h/.cpp).
-- Provide interactive sorting by title, year, or author.
-- Support for applying filters (grayscale, invert, blur) using OpenCV.
-- Includes basic tools for cropping and rotating images.
-
 Directory Overview:
 --------------------
 1. `artwork.h` / `artwork.cpp`
