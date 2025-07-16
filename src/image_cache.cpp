@@ -11,6 +11,7 @@ void ImageCache::printUsageList(const std::string& label) {
 	// Purpose: Prints the usage list
 	// Parameters: string label
 	// Return Value: void
+	// Limitations:
     // -------------------
     std::cout << label;
     for (const auto& id : ImageCache::usageList) {
@@ -24,14 +25,15 @@ void ImageCache::updateUsage(const std::string& artworkId) {
     // Purpose: Updates the usage of the artworkId in the linked list
     // Parameters: string artworkId
     // Return Value: void
+    // Limitations: 
     // -------------------
-    //std::cout << "Updating usage of " << artworkId << std::endl;
-    //ImageCache::printUsageList("Before update: ");
+    // std::cout << "Updating usage of " << artworkId << std::endl;
+    // ImageCache::printUsageList("Before update: ");
 
     ImageCache::usageList.remove(artworkId);
     ImageCache::usageList.push_front(artworkId);
 
-    //ImageCache::printUsageList("After update: ");
+    // ImageCache::printUsageList("After update: ");
 }
 
 void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
@@ -40,6 +42,7 @@ void ImageCache::addImage(const std::string& artworkId, const cv::Mat& image) {
     // Parameters: string artworkId
     //             cv::Mat image
     // Return Value: void
+    // Limitations:
     // -------------------
     std::cout << "Add image " << artworkId << " with image size " << image.size << std::endl;
 
@@ -55,6 +58,7 @@ cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
     // Purpose: Tries to retrieve an image from the cache using the artworkId
     // Parameters: string artworkId
     // Return Value: cv::Mat
+    // Limitations: 
     // -------------------
     if (ImageCache::imageMap.find(artworkId) == ImageCache::imageMap.end()) {
         return cv::Mat();
@@ -68,6 +72,7 @@ QPixmap ImageCache::matToQPixmap(const cv::Mat& image) {
     // Purpose: Converts a cv::Mat to a QPixmap
     // Parameters: cv::Mat image
     // Return Value: QPixmap
+    // Limitations: 
     // -------------------
     // Check if image is empty
     if (image.empty()) {
