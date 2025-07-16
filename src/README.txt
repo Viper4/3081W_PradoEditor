@@ -21,10 +21,10 @@ Implements the `ArtworkManager` and `EditorManager` methods. Handles:
 Implements support functions for parsing artwork metadata and initializing the `Artwork` struct. Contains parsing logic for CSV fields.
 
 4. `image_cache.cpp`
-Manages caching of OpenCV `cv::Mat` images using a static map. Provides fast retrieval and ensures only one copy of each image is held in memory.
+Manages caching of OpenCV `cv::Mat` images using a static map. Provides fast retrieval and ensures only one copy of each image is held in memory. To be implemented in the final version of the application, not applicable to Version 1.0.
 
 5. `image_scroll_gallery.cpp`
-Implements a Qt widget (`ImageScrollGallery`) to show artwork images in a grid view. Supports scrolling and updating visible images dynamically.
+Implements a Qt widget (`ImageScrollGallery`) to show artwork images in a grid view. Supports scrolling and updating visible images dynamically. To be implemented in the final version of the application, not applicable to Version 1.0.
 
 6. `prado_editor.cpp`
 Implements the main application window setup. Connects the UI defined in Qt Designer to the rest of the application logic.
