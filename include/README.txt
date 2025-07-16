@@ -1,9 +1,6 @@
-README.txt
+README.txt for include folder
 
-Project: Prado Editor Interface – Artwork Image Manipulation
 
-Description:
-This project is a simplified mobile editor for exploring, displaying, and manipulating images of artworks from the Prado Museum. It is part of a broader series on building graphical and data-centric interfaces in C++ using Qt and OpenCV. The program loads metadata from a CSV file and allows users to apply basic image transformations, such as cropping, filtering, and sorting, directly through a graphical interface.
 
 Main Features:
 ---------------
