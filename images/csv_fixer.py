@@ -3,11 +3,13 @@ import re
 
 def clean_csv(input_file, output_file):
     """
-    Reads the raw text from the input_file (assuming it is a csv from the prado dataset) and
+    Contributors: Lucas Giebler
+    Purpose: reads the raw text from the input_file (assuming it is a csv from the prado dataset) and
     cleaning the text and generating a new csv file with each row cleanly formatted on new lines
-
+    Parameters:
     :param input_file: string file path to the file to read from
     :param output_file: string file path to the file to write to
+    Return Value: None
     """
     with open(input_file, mode="r", encoding="utf-8", newline='') as infile, \
             open(output_file, mode="w", encoding="utf-8", newline='') as outfile:
