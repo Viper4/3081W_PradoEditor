@@ -1,7 +1,7 @@
-README.txt for tests folder
+## README.md for tests folder
 
 for file
-testing.cpp
+`testing.cpp`
 
 Contains Google Test unit tests for:
 -Utility functions (trim)
