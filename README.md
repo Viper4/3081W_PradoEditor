@@ -85,9 +85,9 @@ cd 3081W_PradoEditor
 
    Windows:
    
-   Follow the installation guide here: https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html  
-   After downloading the .exe file, run it and place the generated opencv folder anywhere on your computer  
-   Add the ...\opencv\build\x64\vc16\bin to your system environment path variable  
+   1. Follow the installation guide here: https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html  
+   2. Download the `.exe` file, run the file, & place the generated opencv folder anywhere on your computer  
+   3. Add `...\opencv\build\x64\vc16\bin` to your system environment path variable  
    
 ### :running: Executing program
 
@@ -100,14 +100,12 @@ Create a `build` directory, configure with CMake, and compile:
    make
    ```
 
-   On Windows:
-
-   For Microsoft Visual Studio:  
+   Windows (Microsoft Visual Studio):  
    1. Navigate to Project > Properties > VC++ Directories  
-   2. Add the following path to your 'Include Directories': ...\opencv\build\include  
-   3. Add the following path to your 'Library Directories': ...\opencv\build\x64\vc16\lib  
+   2. Add the following path to your 'Include Directories': `...\opencv\build\include`  
+   3. Add the following path to your 'Library Directories': `...\opencv\build\x64\vc16\lib ` 
    4. Navigate to Project > Properties > Linker > Input  
-   5. Add the following file to your 'Additional Dependencies': opencv_world4120d.lib  
+   5. Add the following file to your 'Additional Dependencies': `opencv_world4120d.lib`  
       - Replace 4120 with whatever OpenCV version you are using  
       - 'd' for debug version, remove it for release version  
 
@@ -118,7 +116,7 @@ Create a `build` directory, configure with CMake, and compile:
    ```
 
    Windows:  
-   Build and run it via MS Visual Studio
+   - Build & run the program via MS Visual Studio
    
 ### :test_tube: Running Tests
 Unit tests are implemented with **Google Test:**
@@ -157,7 +155,7 @@ Full Documentation:
 
 ## :warning: License TO_DO
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the `LICENSE.md` file for details
 
 <!-- Acknowledgments -->
 ## :gem: Acknowledgements
