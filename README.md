@@ -15,6 +15,7 @@ This project demonstrates object-oriented programming, large-scale system design
   * [:bangbang: Prerequisites](#bangbang-prerequisites)
   * [:gear: Installing](#gear-installing)
   * [:running: Executing program](#running-executing-program)
+  * [:test_tube: Running Tests](#test-running-tests)
 - [:eyes: Usage](#eyes-usage)
   * [:grey_question: FAQ](#faq)
 - [:wave: Authors](#wave-authors)
@@ -84,7 +85,7 @@ cd 3081W_PradoEditor
 
    Windows (WinGet):
    
-   ```bash
+   ```powershell
    winget install opencv
      
    winget install qt
@@ -93,31 +94,75 @@ cd 3081W_PradoEditor
 ### :running: Executing program
 
 3. **Build the project:**
+Create a `build` directory, configure with CMake, and compile:
+   
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
+
+   On Windows (PowerShell):
+
+   ```powershell
+   mkdir build
+   cd build
+   cmake ..
+   cmake --build . --config Release
+   ```
 
 4. **Run the program:**
+   Linux/macOS:
+   ```bash
+   ./PradoEditor
+   ```
 
-## :eyes: Usage
+   Windows:
+   ```powershell
+   .\Release\PradoEditor.exe
+   ```
+### :test_tube: Running Tests
+Unit tests are implemented with **Google Test:**
 
-### :grey_question: FAQ
+```bash
+ctest --verbose
+```   
+   
+## :eyes: Usage TO_DO
+
+### :grey_question: FAQ TO_DO
+**Q: The application can't find Qt or OpenCV during build. What should I do?**  
+A: Make sure you have installed the required dependencies. For Windows, set environment variables:
+```bash
+setx OpenCV_DIR "C:\path\to\opencv\build"
+setx Qt5_DIR "C:\path\to\Qt\5.x\msvc2019_64\lib\cmake\Qt5"
+```
 
 ## :wave: Authors
-
-<a href="">
-  <img src="" />
-</a>
+- [Huiwen Jia](https://github.com/jAww404)
+- [Lucas Gieber](https://github.com/Viper4)
+- [Sarah Wood](https://github.com/SarahJWood)
+- [Taro Welches](https://github.com/tarowelches)
 
 ## :scroll: Version History
-1.0
-Initial Release
+- 1.0
+  - Initial Release
 
-## :handshake: Help & Documentation
-Any advise for common problems or issues.
+## :handshake: Help & Documentation TO_DO
 
 command to run if program contains helper info
-## :warning: License
+
+Project Link: https://github.com/Viper4/3081W_PradoEditor
+
+Full Documentation: 
+
+## :warning: License TO_DO
+
+This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
 
 <!-- Acknowledgments -->
 ## :gem: Acknowledgements
  - [Awesome README](https://github.com/matiassingers/awesome-readme)
  - [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md#travel--places)
  - [Readme Template](https://github.com/othneildrew/Best-README-Template)
+ - [Prado Images Kaggle Dataset](https://www.kaggle.com/datasets/maparla/prado-museum-pictures)
