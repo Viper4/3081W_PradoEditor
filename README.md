@@ -111,13 +111,13 @@ Create a `build` directory, configure with CMake, and compile:
       - Replace 4120 with whatever OpenCV version you are using  
       - 'd' for debug version, remove it for release version  
 
-5. **Run the program:**
-   Linux/macOS:
+5. **Run the program:**  
+   Linux/macOS:  
    ```bash
    ./PradoEditor
    ```
 
-   Windows:
+   Windows:  
    Build and run it via MS Visual Studio
    
 ### :test_tube: Running Tests
