@@ -16,10 +16,10 @@ This project demonstrates object-oriented programming, large-scale system design
   * [:gear: Installing](#gear-installing)
   * [:running: Executing program](#running-executing-program)
 - [:eyes: Usage](#eyes-usage)
-  * [Help](#help)
-  * [FAQ](#faq)
+  * [:grey_question: FAQ](#faq)
 - [:wave: Authors](#wave-authors)
 - [:scroll: Version History](#scroll-version-history)
+- [:handshake: Help & Documentation](#help)
 - [:warning: License](#warning-license)
 - [:gem: Acknowledgements](#gem-acknowledgements)
 
@@ -97,11 +97,8 @@ cd 3081W_PradoEditor
 4. **Run the program:**
 
 ## :eyes: Usage
-### Help
-Any advise for common problems or issues.
 
-command to run if program contains helper info
-### FAQ
+### :grey_question: FAQ
 
 ## :wave: Authors
 
@@ -113,6 +110,10 @@ command to run if program contains helper info
 1.0
 Initial Release
 
+## :handshake: Help & Documentation
+Any advise for common problems or issues.
+
+command to run if program contains helper info
 ## :warning: License
 
 <!-- Acknowledgments -->
