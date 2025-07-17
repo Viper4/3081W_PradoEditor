@@ -8,7 +8,10 @@
 std::vector<Artwork> PradoEditorMobileInterface::getArtworkGallery()
 {
     // RESOLVE: What are we doing here? Just copying the GlobalGallery??
-
+    // Contributors: 
+    // Purpose: 
+    // Limitations: 
+	
     /*std::vector<Artwork> result;
     result = GlobalGallery;
     for (const auto &[id, artwork] : GlobalGallery)
@@ -24,7 +27,7 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria)
     // Contributors: Taro Welches and Lucas Giebler
     // Purpose: To sort the displayed artwork by a certain criteria input by user
     // Parameters: const std::string& criteria
-    // Return: None
+    // Return: void
     // Limitations: 
 
     switch (criteria) {
