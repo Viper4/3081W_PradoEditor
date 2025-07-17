@@ -83,14 +83,12 @@ cd 3081W_PradoEditor
    brew install opencv qt
    ```
 
-   Windows (WinGet):
+   Windows:
    
-   ```powershell
-   winget install opencv
-     
-   winget install qt
-   ```
-    
+   Follow the installation guide here: https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html
+   After downloading the .exe file, run it and place the generated opencv folder anywhere on your computer
+   Add the ...\opencv\build\x64\vc16\bin to your system environment path variable   
+   
 ### :running: Executing program
 
 3. **Build the project:**
@@ -102,25 +100,26 @@ Create a `build` directory, configure with CMake, and compile:
    make
    ```
 
-   On Windows (PowerShell):
+   On Windows:
 
-   ```powershell
-   mkdir build
-   cd build
-   cmake ..
-   cmake --build . --config Release
-   ```
+   For Microsoft Visual Studio:
+   1. Navigate to Project > Properties > VC++ Directories
+   2. Add the following path to your 'Include Directories': ...\opencv\build\include
+   3. Add the following path to your 'Library Directories': ...\opencv\build\x64\vc16\lib
+   4. Navigate to Project > Properties > Linker > Input
+   5. Add the following file to your 'Additional Dependencies': opencv_world4120d.lib
+      -Replace 4120 with whatever OpenCV version you are using
+      -'d' for debug version, remove it for release version
 
-4. **Run the program:**
+5. **Run the program:**
    Linux/macOS:
    ```bash
    ./PradoEditor
    ```
 
    Windows:
-   ```powershell
-   .\Release\PradoEditor.exe
-   ```
+   Build and run it via MS Visual Studio
+   
 ### :test_tube: Running Tests
 Unit tests are implemented with **Google Test:**
 
