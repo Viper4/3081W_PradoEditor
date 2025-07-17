@@ -127,7 +127,7 @@ ctest --verbose
    
 ## :eyes: Usage TO_DO
 
-### :grey_question: FAQ TO_DO
+### :grey_question: FAQ 
 **Q: The application can't find Qt or OpenCV during build. What should I do?**  
 A: Make sure you have installed the required dependencies. For Windows, set environment variables:
 ```bash
@@ -153,7 +153,7 @@ Project Link: https://github.com/Viper4/3081W_PradoEditor
 
 Full Documentation: 
 
-## :warning: License TO_DO
+## :warning: License 
 
 This project is licensed under the MIT License - see the `LICENSE.md` file for details
 
