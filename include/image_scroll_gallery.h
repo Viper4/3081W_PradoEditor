@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <opencv2/core.hpp>
 #include <QListView>
+#include <artwork.h>
 
 class ImageScrollGallery : public QWidget {
 private:
@@ -21,14 +22,18 @@ private:
 	int numTotalImages;
 	int imagesPerRow;
 	int numRows;
+	int visibleRows;
+	QIcon placeholderIcon;
+	int previousFirstIndex;
 
 	void loadImagesInView(int firstIndex, int lastIndex);
-
-	QPixmap fitPixmapToSize(const QPixmap& pixmap, int width, int height, bool keepAspectRatio);
+	void onScroll(int value);
+	void onItemClicked(const QModelIndex& index);
 
 public:
-	ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int numTotalImages, int imagesPerRow, int iconSize, int itemSize);
-	void onScroll(int value);
+	static std::unordered_map<std::string, Artwork> GlobalGallery;
+
+	ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int imagesPerRow, int iconSize, int itemSize);
 };
 
 #endif // IMAGE_SCROLL_GALLERY_H

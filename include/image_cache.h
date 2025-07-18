@@ -9,11 +9,13 @@
 
 class ImageCache {
 private:
+    static std::list<std::string> usageList;
+    static std::unordered_map<std::string, std::list<std::string>::iterator> usageMap;
+    static std::unordered_map<std::string, cv::Mat> imageMap;
+
 	static void printUsageList(const std::string& label);
 public:
     static int maxImages;
-    static std::list<std::string> usageList;
-    static std::unordered_map<std::string, cv::Mat> imageMap;
 
     static void updateUsage(const std::string& artworkId);
     static void addImage(const std::string& artworkId, const cv::Mat& image);

@@ -1,6 +1,6 @@
-#include "include/prado_editor.h"
+#include "prado_editor.h"
 #include <QVBoxLayout>
-#include <include/image_scroll_gallery.h>
+#include <image_scroll_gallery.h>
 
 PradoEditor::PradoEditor(QWidget* parent) : QMainWindow(parent)
 {

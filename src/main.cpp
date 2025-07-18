@@ -3,77 +3,14 @@
 #include <sstream>
 #include <map>
 #include <opencv2/opencv.hpp>
-#include "include/artwork.h"
-#include "include/managers.h"
-#include <include/prado_editor.h>
+#include "artwork.h"
+#include "managers.h"
+#include <prado_editor.h>
 #include <QtWidgets/QApplication>
-#include <include/image_cache.h>
-#include <include/image_scroll_gallery.h>
+#include <image_cache.h>
+#include <image_scroll_gallery.h>
 #include <QVBoxLayout>
-
-std::vector<Artwork> GlobalGallery;
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-static void initializeConsole() {
-    // Contributors: Lucas Giebler
-    // Purpose: Initialize a custom console UI for debugging
-    // Parameters: 
-    // Return Value: void
-    // Limitations: 
-    // -------------------
-#ifdef _WIN32
-    AllocConsole();                   // Allocate a new console window
-    FILE* fpOut;
-    freopen_s(&fpOut, "CONOUT$", "w", stdout);  // Redirect stdout to console
-    freopen_s(&fpOut, "CONOUT$", "w", stderr);  // Redirect stderr to console
-    std::cout << "Custom console initialized" << std::endl;
-#else
-    // Redirect stdout and stderr to a log file on macOS/Linux
-    FILE* fpOut = freopen("/tmp/myapp_stdout.log", "w", stdout);
-    FILE* fpErr = freopen("/tmp/myapp_stderr.log", "w", stderr);
-    if (fpOut && fpErr) {
-        std::cout << "Console output redirected to /tmp/*.log (Unix)" << std::endl;
-    }
-    else {
-        std::cerr << "Failed to redirect console output on Unix" << std::endl;
-    }
-#endif
-}
-
-static void printArtwork(const Artwork& art) {
-    // Contributors: Lucas Giebler
-    // Purpose: Print a few properties of the given Artwork
-    // Parameters: Artwork art - artwork to print
-    // Return Value: void
-    // Limitations: Expects Artwork to have at least id, work_title, author, subtitle, description, sheet_date, and image_url properties in metadata
-    // -------------------
-    std::cout << "\nArtwork " << art.metadata.at("id") << std::endl;
-    std::cout << " Title: " << art.metadata.at("work_title") << std::endl;
-    std::cout << " Author: " << art.metadata.at("author") << std::endl;
-    std::cout << " Subtitle: " << art.metadata.at("subtitle") << std::endl;
-    //std::cout << " Description: " << art.metadata.at("description") << std::endl;
-    std::cout << " Year: " << art.metadata.at("sheet_date") << std::endl;
-    std::cout << " Image URL: " << art.metadata.at("image_url") << std::endl;
-}
-
-static void printArtworkVector(const std::vector<Artwork>& vec, const std::string& label, int count) {
-    // Contributors: Lucas Giebler
-	// Purpose: Print the contents of the given Artwork vector
-	// Parameters: const std::vector<Artwork>& vec - vector to print
-    //             const std::string& label - label to print before printing artworks
-    //             int count - maximum number of artworks to print
-	// Return Value: void
-	// Limitations: 
-    std::cout << label << std::endl;
-    for (int i = 0; i < min(count, vec.size()); i++) {
-        Artwork art = vec.at(i);
-        printArtwork(art);
-    }
-	std::cout << "-------------------" << std::endl;
-}
+#include <debug.h>
 
 static std::string parseLine(std::stringstream& stream, std::string& line, char delimiter) {
 	// Contributors: Lucas Giebler
@@ -92,6 +29,10 @@ static std::string parseLine(std::stringstream& stream, std::string& line, char 
     return line.substr(i, line.length() - 2 * i);
 }
 
+static int randomInt(int min, int max) {
+    return rand() % (max - min + 1) + min;
+}
+
 int main(int argc, char* argv[])
 {
     // Contributors: Lucas, Taro, Sarah, and Huiwen
@@ -101,15 +42,15 @@ int main(int argc, char* argv[])
     // Return Value: void
     // Limitations: 
     // -------------------
-    initializeConsole();
+    Debug::initializeConsole();
+
+    PradoEditorMobileInterface pradoInterface;
+    ArtworkManager artworkManager;
 
     // ------------------- LOAD CSV FILE -------------------
     std::ifstream file("images/clean_prado.csv");
     std::string line;
     std::getline(file, line); // Skip header
-
-    PradoEditorMobileInterface pradoInterface;
-    ArtworkManager artworkManager;
 
     int idcount = 0;
 
@@ -117,7 +58,6 @@ int main(int argc, char* argv[])
     {
         std::stringstream stream(line);
         Artwork art;
-        SubtitleData subtitle;
 
         // Headers are:
         // work_url,work_image_url,author,author_bio,author_url,author_id,work_title,work_subtitle,work_exposed,work_description,
@@ -166,129 +106,134 @@ int main(int argc, char* argv[])
 			std::replace(value.begin(), value.end(), '~', '"');
         }
 
-        GlobalGallery.push_back(art);
-        ++idcount;
+        if (art.metadata["id"].size() < 10) {
+            ImageScrollGallery::GlobalGallery[art.metadata["id"]] = art;
+            ++idcount;
+        }
     }
-    printArtworkVector(GlobalGallery, "GlobalGallery", 999999);
+    Debug::Debug::printArtworkMap(ImageScrollGallery::GlobalGallery, "GlobalGallery", 50);
 
-    std::cout << "Loaded " << GlobalGallery.size() << " artworks.\n";
+    std::cout << "Loaded " << ImageScrollGallery::GlobalGallery.size() << " artworks.\n";
 
     // ------------------- APPLY FILTER -------------------
-    cv::Mat test_image = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
+    cv::Mat testImage = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
+    cv::namedWindow("Original", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Original", 400, 400);
+    cv::imshow("Original", testImage);
 
     std::cout << "\n[ApplyFilter] Test: grayscale\n";
-    std::map<std::string, int> grayscaleParams = { {"type", 1} };
-    cv::Mat grayImg = artworkManager.applyFilter(test_image, grayscaleParams);
-    ImageCache::addImage("0", test_image);
-    ImageCache::addImage("1", grayImg);
+    cv::Mat grayImg = artworkManager.applyFilter(testImage, ArtworkManager::FilterType::GRAYSCALE);
+    cv::namedWindow("Grayscale", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Grayscale", 400, 400);
+    cv::imshow("Grayscale", grayImg);
 
     std::cout << "\n[ApplyFilter] Test: invert\n";
-    std::map<std::string, int> invertParams = { {"type", 2} };
-    cv::Mat invertedImg = artworkManager.applyFilter(test_image, invertParams);
-    ImageCache::addImage("2", invertedImg);
+    cv::Mat invertedImg = artworkManager.applyFilter(testImage, ArtworkManager::FilterType::INVERT);
+    cv::namedWindow("Inverted", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Inverted", 400, 400);
+    cv::imshow("Inverted", invertedImg);
 
     std::cout << "\n[ApplyFilter] Test: blur\n";
-    std::map<std::string, int> blurParams = { {"type", 3} };
-    cv::Mat blurredImg = artworkManager.applyFilter(test_image, blurParams);
-    ImageCache::addImage("3", blurredImg);
+    cv::Mat blurredImg = artworkManager.applyFilter(testImage, ArtworkManager::FilterType::BLUR);
+    cv::namedWindow("Blurred", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Blurred", 400, 400);
+    cv::imshow("Blurred", blurredImg);
+
+    std::cout << "\n[ApplyFilter] Test: hsv\n";
+    cv::Mat hsvImg = artworkManager.applyFilter(testImage, ArtworkManager::FilterType::HSV);
+    cv::namedWindow("HSV", cv::WINDOW_NORMAL);
+    cv::resizeWindow("HSV", 400, 400);
+    cv::imshow("HSV", hsvImg);
+
+    std::cout << "\n[ApplyFilter] Test: edge case\n";
+    cv::Mat edgeCaseFilter = artworkManager.applyFilter(cv::Mat(), ArtworkManager::FilterType::INVERT);
 
     // ------------------- CROP IMAGE -------------------
-    std::cout << "\n[CropImage] Test: crop 5x5\n";
-    cv::Mat input = cv::Mat::ones(10, 10, CV_8UC1) * 200;
-    std::map<std::string, int> cropParams = { {"x", 2}, {"y", 2}, {"width", 5}, {"height", 5} };
-    try
-    {
-        cv::Mat cropped = artworkManager.cropImage(input, cropParams);
-        std::cout << "Cropped size: " << cropped.rows << "x" << cropped.cols << " (Expected: 5x5)\n";
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "CropImage error: " << e.what() << "\n";
-    }
+    std::cout << "\n[CropImage] Test: crop uncentered\n";
+    cv::Mat cropped = artworkManager.cropImage(testImage, testImage.cols / 2, testImage.rows / 2, testImage.cols / 2, testImage.rows / 2);
+
+    cv::namedWindow("Cropped (uncentered)", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Cropped (uncentered)", 400, 400);
+    cv::imshow("Cropped (uncentered)", cropped);
+
+    std::cout << "\n[CropImage] Test: crop centered\n";
+    cv::Mat croppedCentered = artworkManager.cropImageCentered(testImage, testImage.cols / 2, testImage.rows / 2);
+
+    cv::namedWindow("Cropped (centered)", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Cropped (centered)", 400, 400);
+    cv::imshow("Cropped (centered)", croppedCentered);
+
+    std::cout << "\n[CropImage] Test: crop edge case\n";
+    cv::Mat edgeCaseCrop = artworkManager.cropImage(cv::Mat(), -100, -10, -10, -10);
+
+    // ------------------- ROTATE IMAGE -------------------
+    std::cout << "\n[RotateImage] Test: rotate 90 degrees\n";
+	cv::Mat rotated = artworkManager.rotateImage(testImage, 90);
+
+    cv::namedWindow("Rotated 90", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Rotated 90", 400, 400);
+    cv::imshow("Rotated 90", rotated);
+
+    std::cout << "\n[RotateImage] Test: rotate edge case\n";
+    cv::Mat edgeCaseRotate = artworkManager.rotateImage(cv::Mat(), -1000);
 
     // ------------------- GET ARTWORK BY ID -------------------
     std::cout << "\n[GetArtworkByID] Test: lookup by ID\n";
-    std::string testId = "P002073"; // must exist in your CSV
-    Artwork found = artworkManager.getArtworkByID(testId);
-    if (!found.metadata.empty())
-    {
-        std::cout << "Found artwork: " << std::endl;
-        printArtwork(found);
-    }
-    else
-    {
-        std::cout << "Artwork ID '" << testId << "' not found." << std::endl;
-    }
-
-    // ------------------- SPLIT SUBTITLE -------------------
-    std::cout << "\n[SplitSubtitle] Test:\n";
-    if (!GlobalGallery.empty())
-    {
-        std::string subtitleText = GlobalGallery[0].metadata.at("subtitle");
-        SubtitleData parsed = pradoInterface.splitSubtitle(subtitleText);
-        std::cout << "Subtitle: " << subtitleText << "\n";
-        std::cout << "Parsed year: " << parsed.year << "\n";
-        std::cout << "Parsed medium: " << parsed.medium << "\n";
-        std::cout << "Parsed dimensions: " << parsed.dimensions << "\n";
+    std::vector<std::string> testIds = { "P002073", "P002074", "Hello :)" };
+    for (const std::string& testId : testIds) {
+        Artwork found = artworkManager.getArtworkByID(testId);
+        if (!found.metadata.empty())
+        {
+            std::cout << "Found artwork: " << std::endl;
+            Debug::printArtwork(found, false);
+        }
     }
 
     // ------------------- SORT GLOBAL GALLERY -------------------
 	std::cout << "\n[SortGlobalGallery] Test:\n";
 
-	pradoInterface.sortArtworks(SortCriteria::Title);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Title Sort----", 5);
+    std::vector<Artwork> artworks = pradoInterface.artworkMapToVector(ImageScrollGallery::GlobalGallery);
 
-    pradoInterface.sortArtworks(SortCriteria::Newest);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Newest Sort----", 5);
+	pradoInterface.sortArtworks(SortCriteria::Title, artworks);
+    Debug::printArtworkVector(artworks, "\n----Artwork Gallery After Title Sort----", 5);
 
-    pradoInterface.sortArtworks(SortCriteria::Oldest);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Oldest Sort----", 5);
+    pradoInterface.sortArtworks(SortCriteria::Newest, artworks);
+    Debug::printArtworkVector(artworks, "\n----Artwork Gallery After Newest Sort----", 5);
 
-    pradoInterface.sortArtworks(SortCriteria::Artist);
-    printArtworkVector(GlobalGallery, "----Artwork Gallery After Artist Sort----", 5);
+    pradoInterface.sortArtworks(SortCriteria::Oldest, artworks);
+    Debug::printArtworkVector(artworks, "\n----Artwork Gallery After Oldest Sort----", 5);
+
+    pradoInterface.sortArtworks(SortCriteria::Artist, artworks);
+    Debug::printArtworkVector(artworks, "\n----Artwork Gallery After Artist Sort----", 5);
 
     // ------------------- IMAGE CACHE AND IMAGE SCROLL GALLERY UI -------------------
-    // Initialize image cache with some images from 10 to 75
-    cv::Mat temp_image = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\Absolute Cinema.jpg");
-    for (int i = 10; i < 50; i++) {
-        ImageCache::addImage(std::to_string(i), temp_image);
-    }
-
     QApplication app(argc, argv);
     PradoEditor window;
     window.resize(1000, 600);
-    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, -500, -500, 10, 10, 1000, 3, 125, 150);
+    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, 500, 500, 10, 10, 3, 125, 150);
     window.show();
 
     return app.exec();
 }
 
-// Prepare dummy GlobalGallery for tests
-void setupDummyGallery()
+void setupDummyGallery(int numArtworks)
 {
-    // Contributors: Lucas Giebler
-    // Purpose: Initialize a custom console UI for debugging
-    // Parameters: 
+    // Contributors: Taro Welches
+    // Purpose: Prepare a dummy GlobalGallery for tests
+    // Parameters: numArtworks - number of artworks to generate
     // Return Value: void
-    // Limitations: 
+    // Limitations: Need to manually change number of artworks
     // -------------------
-    GlobalGallery.clear();
+    ImageScrollGallery::GlobalGallery.clear();
 
-    Artwork a1, a2, a3;
-    a1.metadata.at("id") = "001";
-    a1.metadata.at("work_title") = "Title A";
-    a1.metadata.at("author") = "Artist Z";
-    a1.metadata.at("sheet_date") = "2000";
+    for (int i = 0; i < numArtworks; i++) {
+        Artwork art;
+		art.metadata.at("id") = std::to_string(i + 1);
+        char work_char = 'A' + i;
+        art.metadata.at("work_title") = "Title " + work_char;
+        art.metadata.at("author") = "Artist " + work_char;
+        art.metadata.at("sheet_date") = std::to_string(randomInt(10, 2000));
 
-    a2.metadata.at("id") = "002";
-    a2.metadata.at("work_title") = "Title B";
-    a2.metadata.at("author") = "Artist Y";
-    a2.metadata.at("sheet_date") = "1995";
-
-    a3.metadata.at("id") = "003";
-    a3.metadata.at("work_title") = "Title C";
-    a3.metadata.at("author") = "Artist X";
-    a3.metadata.at("sheet_date") = "2020";
-
-    GlobalGallery = {a1, a2, a3};
+        ImageScrollGallery::GlobalGallery.insert({art.metadata["id"], art});
+    }
 }

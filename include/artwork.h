@@ -2,7 +2,6 @@
 #define ARTWORK_H
 #include <string>
 #include <opencv2/core.hpp>
-#include <vector>
 
 struct Artwork
 {
@@ -12,25 +11,6 @@ struct Artwork
     // ubication,technical_sheet_autores,technical_sheet_edicion_/_estado,technical_sheet_materia,technical_sheet_ceca,technical_sheet_autora,
     // technical_sheet_lugar_de_produccion
     std::unordered_map<std::string, std::string> metadata;
-
-    Artwork() = default;
-};
-
-extern std::vector<Artwork> GlobalGallery;
-
-// # work_url: string
-// # work_image_url: string
-// # author: string
-//  # work_title: string
-//  # work_subtitle: string
-//  contains year, dimensions, type
-//  # work_description: string
-
-struct SubtitleData
-{
-    std::string year;
-    std::string medium;
-    std::string dimensions;
 };
 
 enum SortCriteria {
@@ -45,9 +25,8 @@ class PradoEditorMobileInterface
 private:
 
 public:
-    std::vector<Artwork> getArtworkGallery();
-    void sortArtworks(const SortCriteria &criteria);
-    SubtitleData splitSubtitle(const std::string &work_subtitle);
+    std::vector<Artwork> artworkMapToVector(const std::unordered_map<std::string, Artwork>& map);
+    void sortArtworks(const SortCriteria &criteria, std::vector<Artwork> &artworks);
 };
 
 #endif

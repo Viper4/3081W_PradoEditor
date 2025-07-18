@@ -1,8 +1,8 @@
 /*#include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
 #include <map>
-#include "include/artwork.h"
-#include "include/managers.h"
+#include "artwork.h"
+#include "managers.h"
 // Contributors: Sarah
 // Purpose: test the functionality and correctness of EditorManager & artwork functions
 
