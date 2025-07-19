@@ -7,6 +7,11 @@
 #include <image_scroll_gallery.h>
 
 std::vector<Artwork> PradoEditorMobileInterface::artworkMapToVector(const std::unordered_map<std::string, Artwork>& artworkMap) {
+    // Contributors: Lucas Giebler
+    // Purpose: To convert a map of artworks to a vector of artworks
+    // Parameters: const std::unordered_map<std::string, Artwork>& artworkMap
+    // Return: std::vector<Artwork>
+	// Limitations: 
     std::vector<Artwork> artworks;
     for (const auto& pair : artworkMap) {
         artworks.push_back(pair.second);

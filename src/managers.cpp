@@ -231,11 +231,9 @@ cv::Mat ArtworkManager::rotateImage(const cv::Mat& image, double angle)
 void ArtworkManager::resetImage(const std::string& artworkId)
 {
     // Contributors : Sarah and Taro
-    // Purpose : rotate the image clockwise by the requested angle
-    // Parameters :
-    	// artworkID: a string that identifies a unique artpiece (str)
-    	// angle: the angle in degrees to rotate the image by (double)
-    // Return Value: new_image: the newly rotated version of the image (Matrix)
+    // Purpose: resets the image to its original state without any changes/manipulations
+    // Parameters: artworkID: a string that identifies a unique artpiece (str)
+    // Return Value: void
     // Limitations: 
     // -------------------
     try {
