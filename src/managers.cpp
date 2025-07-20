@@ -29,6 +29,15 @@ Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
 }
 
 size_t ArtworkManager::writeCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+    // Contributors: Lucas Giebler
+	// Purpose: To write the image data to a buffer (used for cURL downloading images)
+    // Parameters: void* contents - contents of image
+    //             size_t size - size of contents
+    //             size_t nmemb - number of elements
+    //             void* userp - user pointer
+	// Return: size_t totalSize
+	// Limitations: 
+	// -------------------
     std::vector<uchar>* buffer = static_cast<std::vector<uchar>*>(userp);
     size_t totalSize = size * nmemb;
     uchar* data = static_cast<uchar*>(contents);
@@ -50,18 +59,19 @@ cv::Mat ArtworkManager::getImage(const std::string& artworkId)
         return cachedResult;
     }
     // If the image is not in the cache, send curl request to get the image
-    if (ImageScrollGallery::GlobalGallery.find(artworkId) != ImageScrollGallery::GlobalGallery.end()) {
+    if (ImageScrollGallery::GlobalGallery.count(artworkId) != 0) {
         CURL* curl = curl_easy_init();
         std::vector<uchar> image_data;
         cv::Mat image = cv::Mat();
 
         if (curl) {
+            // Set up the cURL request
             curl_easy_setopt(curl, CURLOPT_URL, ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url").c_str());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &image_data);
-            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // follow redirects
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);  // Follow redirects
 
-            CURLcode result = curl_easy_perform(curl);
+            CURLcode result = curl_easy_perform(curl); // Perform the request
             if (result != CURLE_OK) {
                 std::cout << "curl_easy_perform() failed " << ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url") << ": " << curl_easy_strerror(result) << std::endl;
             }
@@ -72,7 +82,7 @@ cv::Mat ArtworkManager::getImage(const std::string& artworkId)
                 }
             }
 
-            curl_easy_cleanup(curl);
+            curl_easy_cleanup(curl); // Cleanup
         }
 
 		// Add the image to the cache
@@ -155,10 +165,7 @@ cv::Mat ArtworkManager::cropImageCentered(const cv::Mat& image, const int width,
     int x = (image.cols - cropWidth) / 2;
     int y = (image.rows - cropHeight) / 2;
 
-    // Ensure ROI is within bounds
-    cv::Rect roi(x, y, cropWidth, cropHeight);
-
-    return image(roi);
+    return image(cv::Rect(x, y, cropWidth, cropHeight)).clone();
 }
 
 Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<std::string, int>& params)

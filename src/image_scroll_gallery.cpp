@@ -90,11 +90,12 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
 	int previousLastIndex = previousFirstIndex + (visibleRows * imagesPerRow) - 1; // Each row has imagesPerRow images
 
+	// Calculate overlap between previous and current load so we dont load images twice
+	// and dont unload images we still need loaded
 	int unloadFirstIndex = previousFirstIndex;
 	if (previousFirstIndex >= firstIndex && previousFirstIndex <= lastIndex) {
 		unloadFirstIndex = lastIndex + 1;
 	}
-
 	int unloadLastIndex = previousLastIndex;
 	if (previousLastIndex >= firstIndex && previousLastIndex <= lastIndex) {
 		unloadLastIndex = firstIndex - 1;
@@ -104,7 +105,6 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 	if (firstIndex >= previousFirstIndex && firstIndex <= previousLastIndex) {
 		loadFirstIndex = previousLastIndex + 1;
 	}
-
 	int loadLastIndex = lastIndex;
 	if (lastIndex >= previousFirstIndex && lastIndex <= previousLastIndex) {
 		loadLastIndex = previousFirstIndex - 1;
