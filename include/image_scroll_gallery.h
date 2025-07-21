@@ -11,18 +11,9 @@
 class ImageScrollGallery : public QWidget {
 private:
 	QListView* listView;
-	float posX;
-	float posY;
-	float width;
-	float height;
-	float bufferX;
-	float bufferY;
 	int iconSize;
 	int itemSize;
 	int numTotalImages;
-	int imagesPerRow;
-	int numRows;
-	int visibleRows;
 	QIcon placeholderIcon;
 	int previousFirstIndex;
 
@@ -33,7 +24,7 @@ private:
 public:
 	static std::unordered_map<std::string, Artwork> GlobalGallery;
 
-	ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int imagesPerRow, int iconSize, int itemSize);
+	ImageScrollGallery(QListView* listView, int iconSize, int itemSize);
 };
 
 #endif // IMAGE_SCROLL_GALLERY_H

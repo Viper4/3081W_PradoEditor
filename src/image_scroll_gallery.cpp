@@ -13,7 +13,7 @@
 
 std::unordered_map<std::string, Artwork> ImageScrollGallery::GlobalGallery;
 
-ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float width, float height, float bufferX, float bufferY, int imagesPerRow, int iconSize, int itemSize) {
+ImageScrollGallery::ImageScrollGallery(QListView* listView, int iconSize, int itemSize) {
 	// Contributors: Lucas Giebler
 	// Purpose: Constructor for ImageScrollGallery
 	// Parameters: float x
@@ -22,24 +22,15 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	//			   float height
 	//             float bufferX - the buffer between the edge of the gallery and the edge of the window
 	//             float bufferY - the buffer between the edge of the gallery and the edge of the window
-	//             int imagesPerRow - the number of images per row
+	//             int iconSize
+	//			   int itemSize
 	// Return Value: ImageScrollGallery
 	// Limitations: Does no checking for valid parameters so negative values will cause UI to not show
 	// -------------------
-	this->posX = x;
-	this->posY = y;
-	this->width = width;
-	this->height = height;
-	this->bufferX = bufferX;
-	this->bufferY = bufferY;
 	this->numTotalImages = GlobalGallery.size();
-	this->imagesPerRow = imagesPerRow;
-	this->numRows = numTotalImages / imagesPerRow;
-	this->visibleRows = height / iconSize;
 
 	// Initializing list view
-	this->listView = new QListView(parent);
-	this->listView->setGeometry(x + bufferX, y + bufferY, width, height);
+	this->listView = listView;
 
 	// Set up the list view for icon grid
 	this->listView->setViewMode(QListView::IconMode);
@@ -63,7 +54,9 @@ ImageScrollGallery::ImageScrollGallery(QWidget* parent, float x, float y, float 
 	QPixmap pixmap("C:\\Users\\vpr16\\Documents\\Random\\Absolute Cinema.jpg");
 	this->placeholderIcon = QIcon(pixmap);
 	for (auto itr = GlobalGallery.begin(); itr != GlobalGallery.end(); itr++) {
-		QStandardItem* item = new QStandardItem(placeholderIcon, QString::fromStdString(itr->first));
+		QStandardItem* item = new QStandardItem(placeholderIcon, QString::fromStdString(GlobalGallery[itr->first].metadata["work_title"]));
+		item->setData(QString::fromStdString(itr->first), Qt::UserRole); // Store artwork ID in user role
+
 		item->setTextAlignment(Qt::AlignCenter);
 		item->setEditable(false);
 		model->appendRow(item);
@@ -86,6 +79,11 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 		return;
 	}
 	lastIndex = std::min(lastIndex, numTotalImages - 1);
+
+	int visibleRows = listView->height() / itemSize;
+	int imagesPerRow = listView->width() / itemSize;
+	std::cout << "visibleRows: " << visibleRows << std::endl;
+	std::cout << "imagesPerRow: " << imagesPerRow << std::endl;
 
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listView->model());
 	int previousLastIndex = previousFirstIndex + (visibleRows * imagesPerRow) - 1; // Each row has imagesPerRow images
@@ -121,7 +119,9 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 
 	std::vector<std::future<cv::Mat>> futures;
 	for (int i = loadFirstIndex; i <= loadLastIndex; i++) {
-		std::string artworkId = model->item(i, 0)->text().toStdString();
+		//std::string artworkId = model->item(i, 0)->text().toStdString();
+		std::string artworkId = model->item(i, 0)->data(Qt::UserRole).toString().toStdString();
+
 		futures.push_back(std::async(std::launch::async, ArtworkManager::getImage, artworkId));
 	}
 	for (int i = loadFirstIndex; i <= loadLastIndex; i++) {
@@ -139,7 +139,6 @@ void ImageScrollGallery::loadImagesInView(int firstIndex, int lastIndex) {
 		int cropSize = std::min(image.rows, image.cols);
 		// Update item with image
 		QPixmap pixmap = ImageCache::matToQPixmap(image);
-		//QPixmap pixmap = ImageCache::matToQPixmap(ArtworkManager::cropImageCentered(image, cropSize, cropSize));
 
 		model->setData(model->index(i, 0), QIcon(pixmap), Qt::DecorationRole);
 	}
@@ -153,6 +152,14 @@ void ImageScrollGallery::onScroll(int value) {
 	// Limitations: 
 	// -------------------
 	// Calculate index of the first image at the top left of the scroll view
+	int visibleRows = listView->height() / itemSize;
+	int imagesPerRow = listView->width() / itemSize;
+
+	std::cout << "visibleRows: " << visibleRows << std::endl;
+	std::cout << "imagesPerRow: " << imagesPerRow << std::endl;
+	std::cout << "height: " << listView->height() << std::endl;
+	std::cout << "width: " << listView->width() << std::endl;
+
 	int firstRow = value / itemSize;
 	int firstIndex = firstRow * imagesPerRow;
 	int lastIndex = firstIndex + (visibleRows * imagesPerRow) - 1; // Each row has imagesPerRow images
@@ -174,7 +181,7 @@ void ImageScrollGallery::onItemClicked(const QModelIndex& index) {
 		std::cout << "Clicked item index " << itemIndex << " out of range" << std::endl;
 		return;
 	}
-	std::string artworkId = listView->model()->data(index, Qt::DisplayRole).toString().toStdString();
+	std::string artworkId = listView->model()->data(index, Qt::UserRole).toString().toStdString();
 	std::cout << "Item " << itemIndex << " clicked with id " << artworkId << std::endl;
 	Debug::printArtwork(ArtworkManager::getArtworkByID(artworkId), true);
 	

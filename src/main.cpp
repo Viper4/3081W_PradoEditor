@@ -11,6 +11,8 @@
 #include <image_scroll_gallery.h>
 #include <QVBoxLayout>
 #include <debug.h>
+#include <QFile>
+#include <QTextStream>
 
 static std::string parseLine(std::stringstream& stream, std::string& line, char delimiter) {
 	// Contributors: Lucas Giebler
@@ -111,10 +113,10 @@ int main(int argc, char* argv[])
             ++idcount;
         }
     }
-    Debug::Debug::printArtworkMap(ImageScrollGallery::GlobalGallery, "GlobalGallery", 50);
+    Debug::printArtworkMap(ImageScrollGallery::GlobalGallery, "GlobalGallery", 50);
 
     std::cout << "Loaded " << ImageScrollGallery::GlobalGallery.size() << " artworks.\n";
-
+    /*
     // ------------------- APPLY FILTER -------------------
     cv::Mat testImage = cv::imread("C:\\Users\\vpr16\\Documents\\Random\\robloxDefault.png");
     cv::namedWindow("Original", cv::WINDOW_NORMAL);
@@ -205,12 +207,23 @@ int main(int argc, char* argv[])
 
     pradoInterface.sortArtworks(SortCriteria::Artist, artworks);
     Debug::printArtworkVector(artworks, "\n----Artwork Gallery After Artist Sort----", 5);
-
+    */
     // ------------------- IMAGE CACHE AND IMAGE SCROLL GALLERY UI -------------------
     QApplication app(argc, argv);
+
+    // Load and apply the QSS file
+    QFile stylesheet1("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme.qss");
+    //QFile stylesheet2("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_updated.qss");
+    //QFile stylesheet3("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_enhanced.qss");
+
+    if (stylesheet1.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        app.setStyleSheet(stylesheet1.readAll());
+        stylesheet1.close();
+    }
+
     PradoEditor window;
     window.resize(1000, 600);
-    ImageScrollGallery gallery = ImageScrollGallery(&window, window.width() / 2 - 250, window.height() / 2 - 250, 500, 500, 10, 10, 3, 125, 150);
     window.show();
 
     return app.exec();
