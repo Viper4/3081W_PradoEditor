@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>390</width>
+    <height>844</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,7 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
+      <!-- Home Page -->
       <widget class="QWidget" name="pageHome">
        <layout class="QVBoxLayout" name="homeLayout">
         <item>
@@ -28,12 +26,9 @@
            <string>Prado Museum</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
-        </item>
-        <item>
-         <widget class="QListView" name="galleryListView"/>
         </item>
         <item>
          <widget class="QLabel" name="labelIntro">
@@ -41,71 +36,94 @@
            <string>Welcome to the Prado Museum App</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnBrowse">
-          <property name="text">
-           <string>Browse Artworks</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnFavorites">
-          <property name="text">
-           <string>My Favorites</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnSearch">
-          <property name="text">
-           <string>Search</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="homeButtonsLayout">
+          <item>
+           <widget class="QPushButton" name="btnBrowse">
+            <property name="text">
+             <string>Browse Artworks</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnFavorites">
+            <property name="text">
+             <string>My Favorites</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSearch">
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
+      <!-- Artwork Details Page -->
       <widget class="QWidget" name="pageDetails">
        <layout class="QVBoxLayout" name="detailsLayout">
         <item>
-         <widget class="QLabel" name="labelArtwork">
+         <widget class="QLabel" name="labelArtworkImage">
           <property name="text">
            <string>[Artwork Image Placeholder]</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelArtistInfo">
+         <widget class="QLabel" name="labelArtworkTitle">
           <property name="text">
-           <string>Artist and Artwork Details</string>
+           <string>Artwork Title</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnApplyFilter">
+         <widget class="QLabel" name="labelArtworkDescription">
           <property name="text">
-           <string>Apply Filter</string>
+           <string>Artwork description will be displayed here.</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnFavorite">
-          <property name="text">
-           <string>Add to Favorites</string>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="detailsButtonsLayout">
+          <item>
+           <widget class="QPushButton" name="btnApplyFilter">
+            <property name="text">
+             <string>Apply Filter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnFavorite">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
+      <!-- Filter Page -->
       <widget class="QWidget" name="pageFilter">
        <layout class="QVBoxLayout" name="filterLayout">
         <item>
@@ -114,14 +132,7 @@
            <string>[Filter Preview Image]</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="sliderIntensity">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -174,25 +185,3 @@
            </widget>
           </item>
          </layout>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
- </widget>
- <resources/>
- <connections/>
-</ui>
