@@ -45,7 +45,7 @@
           <item>
            <widget class="QPushButton" name="btnBrowse">
             <property name="text">
-             <string>Browse Artworks</string>
+             <string>Browse Artwork</string>
             </property>
            </widget>
           </item>
@@ -93,7 +93,7 @@
         <item>
          <widget class="QLabel" name="labelArtworkDescription">
           <property name="text">
-           <string>Artwork description will be displayed here.</string>
+           <string>Artwork description goes here.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -185,3 +185,16 @@
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
