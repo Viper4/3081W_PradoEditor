@@ -22,12 +22,18 @@ private slots:
     void on_filterDropdown_currentIndexChanged(int index);
     void on_btnApplyFilter_clicked();
     void on_btnReset_clicked();
+    void on_btnBack_clicked();
+    void on_btnForward_clicked();
+    void on_btnSave_clicked();
 
 private:
     Ui::PradoEditor ui;
     ImageScrollGallery* gallery;
     std::string selectedFilter;
     std::unordered_map<std::string, ArtworkManager::FilterType> stringToFilterType;
+    std::vector<int> backPageStack;
+    std::vector<int> forwardPageStack;
 
     void setHomeBtnVisible(bool visible);
+    void changePage(int page, bool addToStack);
 };

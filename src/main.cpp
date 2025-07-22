@@ -212,14 +212,14 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
 
     // Load and apply the QSS file
-    QFile stylesheet1("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme.qss");
-    //QFile stylesheet2("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_updated.qss");
-    //QFile stylesheet3("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_enhanced.qss");
+    //QFile stylesheet("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme.qss");
+    //QFile stylesheet("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_updated.qss");
+    QFile stylesheet("C:/Users/vpr16/QtProjects/PradoEditor/prado_theme_enhanced.qss");
 
-    if (stylesheet1.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (stylesheet.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        app.setStyleSheet(stylesheet1.readAll());
-        stylesheet1.close();
+        app.setStyleSheet(stylesheet.readAll());
+        stylesheet.close();
     }
 
     PradoEditor window;

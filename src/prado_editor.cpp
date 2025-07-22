@@ -30,6 +30,9 @@ PradoEditor::PradoEditor(QWidget *parent)
     this->gallery = new ImageScrollGallery(ui.galleryListView, 125, 150);
 
     setHomeBtnVisible(false);
+
+    ui.btnBack->setEnabled(backPageStack.size() > 0);
+    ui.btnForward->setEnabled(forwardPageStack.size() > 0);
     
     ui.retranslateUi(this);
 }
@@ -44,15 +47,30 @@ void PradoEditor::setHomeBtnVisible(bool visible) {
 	ui.btnHome->setVisible(visible);
 }
 
+void PradoEditor::changePage(int page, bool addToStack) {
+	// Contributors: Lucas Giebler
+	// Purpose: Changes the current page
+	// Parameters: 
+	// Return Value: void
+	// Limitations:
+    if (addToStack) {
+        backPageStack.push_back(ui.stackedWidget->currentIndex());
+        forwardPageStack.clear();
+    }
+    ui.btnBack->setEnabled(backPageStack.size() > 0);
+    ui.btnForward->setEnabled(forwardPageStack.size() > 0);
+
+	ui.stackedWidget->setCurrentIndex(page);
+    setHomeBtnVisible(page != 0);
+}
+
 void PradoEditor::on_btnHome_clicked() {
     // Contributors: Lucas Giebler
 	// Purpose: Opens the home page
     // Parameters:
     // Return Value: void
     // Limitations:
-    std::cout << "Home Button Clicked" << std::endl;
-    ui.stackedWidget->setCurrentIndex(0);
-	setHomeBtnVisible(false);
+    changePage(0, true);
 }
 
 void PradoEditor::on_btnExpand_clicked() {
@@ -71,15 +89,14 @@ void PradoEditor::on_btnExpand_clicked() {
         std::cout << "Artwork ID '" << artworkId << "' not found." << std::endl;
         return;
     }
-    ui.stackedWidget->setCurrentIndex(1); // Switch to the details page
-    setHomeBtnVisible(true);
+    changePage(1, true); // Switch to the details page
     Artwork art = ImageScrollGallery::GlobalGallery.at(artworkId); // Get the Artwork object
     QIcon icon = gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>(); // Get the artwork's icon
 
     // Update the details page
     ui.labelArtworkImage->setPixmap(icon.pixmap(300, 300));
     ui.labelArtworkTitle->setText(art.metadata.at("work_title").c_str());
-    ui.labelArtworkDescription->setText(art.metadata.at("description").c_str());
+    ui.textEditArtworkDescription->setText(art.metadata.at("description").c_str());
 }
 
 void PradoEditor::on_btnSearch_clicked() {
@@ -98,6 +115,7 @@ void PradoEditor::on_btnFavorites_clicked() {
     // Return Value: void
     // Limitations:
     std::cout << "Favorites Button Clicked" << std::endl;
+	changePage(3, true);
 }
 
 void PradoEditor::on_btnEditImage_clicked() {
@@ -107,8 +125,7 @@ void PradoEditor::on_btnEditImage_clicked() {
     // Return Value: void
     // Limitations: 
 	std::cout << "Edit Image Button Clicked" << std::endl;
-    ui.stackedWidget->setCurrentIndex(2); // Switch to the edit page
-    setHomeBtnVisible(true);
+    changePage(2, true); // Switch to the edit page
     QIcon icon = gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>(); // Get the artwork's icon
     ui.labelPreview->setPixmap(icon.pixmap(300, 300));
 }
@@ -153,4 +170,52 @@ void PradoEditor::on_btnReset_clicked() {
 	std::cout << "Reset Button Clicked" << std::endl;
 	std::string artworkId = gallery->selectedItem->data(Qt::UserRole).toString().toStdString();
     ui.labelPreview->setPixmap(gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>().pixmap(300, 300));
+}
+
+void PradoEditor::on_btnBack_clicked() {
+    // Contributors: Lucas Giebler
+	// Purpose: Goes back in history
+    // Parameters:
+    // Return Value: void
+	// Limitations:
+    std::cout << "Back Button Clicked" << std::endl;
+    if (backPageStack.size() == 0) {
+		return;
+	}
+    // 1. Add current page to forward stack
+    // 2. Set current page to top of back stack and pop it
+    forwardPageStack.push_back(ui.stackedWidget->currentIndex());
+    int page = backPageStack.back();
+    backPageStack.pop_back();
+    changePage(page, false);
+}
+
+
+void PradoEditor::on_btnForward_clicked() {
+    // Contributors: Lucas Giebler
+    // Purpose: Goes forward in history
+    // Parameters:
+    // Return Value: void
+    // Limitations:
+    std::cout << "Forward Button Clicked" << std::endl;
+    if (forwardPageStack.size() == 0) {
+        return;
+    }
+    // 1. Add current page to back stack
+    // 2. Set current page to top of forward stack and pop it
+    backPageStack.push_back(ui.stackedWidget->currentIndex());
+    int page = forwardPageStack.back();
+    forwardPageStack.pop_back();
+    changePage(page, false);
+}
+
+void PradoEditor::on_btnSave_clicked() {
+	// Contributors: Lucas Giebler
+	// Purpose: Saves the edited image to the device
+	// Parameters:
+	// Return Value: void
+	// Limitations:
+	std::cout << "Save Button Clicked" << std::endl;
+    cv::Mat previewImage = ArtworkManager::pixmapToMat(ui.labelPreview->pixmap());
+    cv::imwrite("edited_image.jpg", previewImage);
 }

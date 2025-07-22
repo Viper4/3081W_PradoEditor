@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed"/>
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Prado Museum App</string>
@@ -20,8 +23,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
-
-      <!-- Home Page -->
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
       <widget class="QWidget" name="pageHome">
        <layout class="QVBoxLayout" name="homeLayout">
         <item>
@@ -30,7 +34,7 @@
            <string>Prado Museum</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -43,7 +47,7 @@
            <string>Welcome to the Prado Museum App!</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -52,7 +56,7 @@
           <item>
            <widget class="QPushButton" name="btnExpand">
             <property name="text">
-             <string>Expand Artwork</string>
+             <string>Show Artwork Details</string>
             </property>
            </widget>
           </item>
@@ -74,17 +78,26 @@
         </item>
        </layout>
       </widget>
-
-      <!-- Artwork Details Page -->
       <widget class="QWidget" name="pageDetails">
        <layout class="QVBoxLayout" name="detailsLayout">
         <item>
          <widget class="QLabel" name="labelArtworkTitle">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <underline>true</underline>
+           </font>
+          </property>
           <property name="text">
            <string>Artwork Title</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -94,20 +107,23 @@
            <string>[Artwork Image Placeholder]</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelArtworkDescription">
-          <property name="text">
+         <widget class="QTextEdit" name="textEditArtworkDescription">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::TextInteractionFlag::LinksAccessibleByMouse</set>
+          </property>
+          <property name="placeholderText">
            <string>Artwork description goes here.</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -131,8 +147,6 @@
         </item>
        </layout>
       </widget>
-
-      <!-- Filter/Edit Page -->
       <widget class="QWidget" name="pageFilter">
        <layout class="QVBoxLayout" name="filterLayout">
         <item>
@@ -141,17 +155,28 @@
            <string>[Filter Preview Image]</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="filterButtons">
+         <layout class="QHBoxLayout" name="filterElements">
           <item>
            <widget class="QComboBox" name="filterDropdown"/>
           </item>
           <item>
            <widget class="QPushButton" name="btnApplyFilter">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Apply</string>
             </property>
@@ -160,18 +185,47 @@
          </layout>
         </item>
         <item>
-         <widget class="QPushButton" name="btnSaveFiltered">
-          <property name="text">
-           <string>Save Edited</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="saveElements">
+          <item>
+           <widget class="QTextEdit" name="textEditSave">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="placeholderText">
+             <string>Enter filename...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSaveFiltered">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Save Edit</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="actionButtons">
           <item>
            <widget class="QPushButton" name="btnReset">
             <property name="text">
-             <string>Reset</string>
+             <string>Reset Image</string>
             </property>
            </widget>
           </item>
@@ -179,28 +233,115 @@
         </item>
        </layout>
       </widget>
-
-      <!-- Favorites Page -->
       <widget class="QWidget" name="pageFavorites">
        <layout class="QVBoxLayout" name="favoritesLayout">
         <item>
-         <widget class="QListView" name="favoritesListView"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnBackFromFavorites">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Back</string>
+           <string>Favorites</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QListView" name="favoritesListView"/>
+        </item>
        </layout>
       </widget>
-
      </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnHome">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::FocusPolicy::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Home</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="historyHorizontalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="btnBack">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font/>
+        </property>
+        <property name="text">
+         <string>&lt;-</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnForward">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>-&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>412</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
