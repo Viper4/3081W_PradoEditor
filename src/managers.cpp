@@ -24,7 +24,7 @@ Artwork ArtworkManager::getArtworkByID(const std::string& artworkId)
 		return ImageScrollGallery::GlobalGallery.at(artworkId);
     }
 
-    std::cout << "Artwork ID '" << artworkId << "' not found." << std::endl;
+    std::cout << "getArtworkByID : Artwork ID '" << artworkId << "' not found." << std::endl;
     return Artwork();
 }
 
@@ -73,12 +73,12 @@ cv::Mat ArtworkManager::getImage(const std::string& artworkId)
 
             CURLcode result = curl_easy_perform(curl); // Perform the request
             if (result != CURLE_OK) {
-                std::cout << "curl_easy_perform() failed " << ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url") << ": " << curl_easy_strerror(result) << std::endl;
+                std::cout << "getImage : curl_easy_perform() failed " << ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url") << ": " << curl_easy_strerror(result) << std::endl;
             }
             else {
                 image = cv::imdecode(image_data, cv::IMREAD_COLOR);
                 if (image.empty()) {
-                    std::cout << "Failed to decode image " << ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url") << "." << std::endl;
+                    std::cout << "getImage : Failed to decode image " << ImageScrollGallery::GlobalGallery.at(artworkId).metadata.at("image_url") << "." << std::endl;
                 }
             }
 
@@ -91,7 +91,7 @@ cv::Mat ArtworkManager::getImage(const std::string& artworkId)
     }
 
 	// If the image is not found in the gallery, return an empty cv::Mat
-    std::cout << "Artwork ID not found: " << artworkId << std::endl;
+    std::cout << "getImage : Artwork ID not found: " << artworkId << std::endl;
     return cv::Mat();
 }
 
@@ -104,11 +104,12 @@ cv::Mat ArtworkManager::applyFilter(const cv::Mat& image, const FilterType filte
     // Limitations: 
     // -------------------	
     if (image.empty()) {
-        std::cout << "Cannot apply filter to empty image." << std::endl;
+        std::cout << "applyFilter : Cannot apply filter to empty image." << std::endl;
 		return cv::Mat();
     }
 
     cv::Mat result;
+    std::vector<cv::Mat> hsvChannels;
     switch (filterType)
     {
     case GRAYSCALE:
@@ -123,8 +124,27 @@ cv::Mat ArtworkManager::applyFilter(const cv::Mat& image, const FilterType filte
     case HSV:
 		cv::cvtColor(image, result, cv::COLOR_BGR2HSV);
         break;
+    case SATURATE:
+        // Convert to HSV
+        cv::cvtColor(image, result, cv::COLOR_BGR2HSV);
+
+        // Split channels
+        cv::split(result, hsvChannels);
+
+        // Increase saturation (S channel)
+        // 1.0 = no change, 1.5 = saturate by 50%
+        hsvChannels[1].convertTo(hsvChannels[1], -1, 1.5, 0);
+
+        // Clamp values to [0, 255]
+        cv::threshold(hsvChannels[1], hsvChannels[1], 255, 255, cv::THRESH_TRUNC);
+
+        // Merge and convert back to BGR
+        cv::merge(hsvChannels, result);
+        cv::cvtColor(result, result, cv::COLOR_HSV2BGR);
+        break;
     default:
-        throw std::invalid_argument("Unknown filter type.");
+        std::cout << "applyFilter : Unknown filter type." << std::endl;
+        return image;
     }
     return result;
 }
@@ -137,14 +157,14 @@ cv::Mat ArtworkManager::cropImage(const cv::Mat& image, const int x, const int y
     // Limitations: 
     // -------------------	
     if (image.empty()) {
-		std::cout << "Cannot crop empty image." << std::endl;
+		std::cout << "cropImage : Cannot crop empty image." << std::endl;
         return cv::Mat();
     }
 
     if (x < 0 || y < 0 || width <= 0 || height <= 0 ||
         x + width > image.cols || y + height > image.rows)
     {
-        std::cout << "WARNING: Crop area is out of bounds." << std::endl;
+        std::cout << "cropImage : Crop area is out of bounds." << std::endl;
         return image.clone();
     }
     return image(cv::Rect(x, y, width, height)).clone();
@@ -180,7 +200,8 @@ Artwork ArtworkManager::editImage(const std::string& artworkId, const std::map<s
 
     cv::Mat image = cv::imread("images/" + artworkId + ".jpg");
     if (image.empty()) {
-        throw std::runtime_error("Failed to load image for: " + artworkId);
+		std::cout << "editImage : Failed to load image for: " << artworkId << std::endl;
+        return original;
     }
 
     if (params.count("width") && params.count("height"))
@@ -208,7 +229,7 @@ cv::Mat ArtworkManager::rotateImage(const cv::Mat& image, double angle)
     // Limitations: 
     // -------------------	
     if (image.empty()) {
-        std::cout << "Cannot rotate empty image." << std::endl;
+        std::cout << "rotateImage : Cannot rotate empty image." << std::endl;
 		return cv::Mat();
     }
 
@@ -250,21 +271,93 @@ void ArtworkManager::resetImage(const std::string& artworkId)
         // Load original image from disk (e.g., art001_original.jpg)
         cv::Mat original = cv::imread("images/" + artworkId + "_original.jpg");
         if (original.empty()) {
-            std::cerr << "Error: original image file not found for artwork ID: " << artworkId << "\n";
+            std::cout << "resetImage : original image file not found for artwork ID: " << artworkId << "\n";
             return;
         }
 
         // Save restored image to a new file
         std::string outputPath = "images/restored_" + artworkId + ".jpg";
         if (!cv::imwrite(outputPath, original)) {
-            std::cerr << "Error: failed to write restored image to disk.\n";
+            std::cout << "resetImage : failed to write restored image to disk.\n";
         }
         else {
-            std::cout << "Restored image saved to: " << outputPath << "\n";
+            std::cout << "resetImage : Restored image saved to: " << outputPath << "\n";
         }
 
     }
     catch (const std::exception& e) {
         std::cerr << "Exception in resetImage: " << e.what() << "\n";
     }
+}
+
+QPixmap ArtworkManager::matToPixmap(const cv::Mat& image) {
+    if (image.empty()) {
+        std::cerr << "matToPixmap: Converting empty image to QPixmap" << std::endl;
+        return QPixmap();
+    }
+
+    QImage qimage;
+    cv::Mat converted;
+
+    switch (image.type()) {
+    case CV_8UC1: // Grayscale
+        qimage = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_Grayscale8);
+        break;
+    case CV_8UC3: // BGR color
+        cv::cvtColor(image, converted, cv::COLOR_BGR2RGB);
+        qimage = QImage(converted.data, converted.cols, converted.rows, converted.step, QImage::Format_RGB888);
+        break;
+    case CV_8UC4: // BGRA color (with alpha)
+        cv::cvtColor(image, converted, cv::COLOR_BGRA2RGBA);
+        qimage = QImage(converted.data, converted.cols, converted.rows, converted.step, QImage::Format_RGBA8888);
+        break;
+    default:
+        std::cerr << "matToPixmap: Unsupported cv::Mat type for conversion: " << image.type() << std::endl;
+        return QPixmap();
+    }
+
+    return QPixmap::fromImage(qimage.copy()); // .copy() to detach from OpenCV memory
+}
+
+cv::Mat ArtworkManager::pixmapToMat(const QPixmap& pixmap) {
+    // Contributors: Lucas Giebler
+    // Purpose: Converts a QPixmap to a cv::Mat
+    // Parameters: QPixmap pixmap - The pixmap to convert
+    // Return Value: cv::Mat
+    // Limitations: Only supports Format_Grayscale8 and Format_RGB888
+    // -------------------
+	// Convert the QPixmap to QImage and then to cv::Mat
+    QImage qimage = pixmap.toImage();
+
+	cv::Mat image;
+    switch (qimage.format()) {
+    case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied: {
+        // 4-channel image: BGRA
+        cv::Mat temp(qimage.height(), qimage.width(), CV_8UC4, const_cast<uchar*>(qimage.bits()), qimage.bytesPerLine());
+        cv::cvtColor(temp, image, cv::COLOR_BGRA2BGR); // Convert to BGR
+        break;
+    }
+    case QImage::Format_RGB888: {
+        // 3-channel image: RGB
+        QImage swapped = qimage.rgbSwapped(); // Convert to BGR
+        image = cv::Mat(swapped.height(), swapped.width(), CV_8UC3, const_cast<uchar*>(swapped.bits()), swapped.bytesPerLine()).clone();
+        break;
+    }
+    case QImage::Format_Grayscale8: {
+        image = cv::Mat(qimage.height(), qimage.width(), CV_8UC1, const_cast<uchar*>(qimage.bits()), qimage.bytesPerLine()).clone();
+        break;
+    }
+    case QImage::Format_Indexed8: {
+        // Sometimes used for grayscale
+        image = cv::Mat(qimage.height(), qimage.width(), CV_8UC1, const_cast<uchar*>(qimage.bits()), qimage.bytesPerLine()).clone();
+        break;
+    }
+    default:
+        std::cerr << "qimageToMat: Unsupported QImage format: " << qimage.format() << std::endl;
+        return cv::Mat(); // Return empty image
+    }
+
+    return image;
 }

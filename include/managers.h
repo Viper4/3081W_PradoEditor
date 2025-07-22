@@ -5,7 +5,8 @@
 #include <string>
 #include <map>
 #include <opencv2/core.hpp>
-#include "artwork.h" // Assumes you have an Artwork class with id, image, etc.
+#include <artwork.h> // Assumes you have an Artwork class with id, image, etc.
+#include <QPixmap>
 
 class ArtworkManager {
 private:
@@ -14,7 +15,8 @@ public:
         GRAYSCALE,
         INVERT,
         BLUR,
-        HSV
+        HSV,
+        SATURATE
     };
 
     static Artwork getArtworkByID(const std::string& artworkId);
@@ -26,6 +28,8 @@ public:
     static Artwork editImage(const std::string& artworkId, const std::map<std::string, int>& params);
     static cv::Mat rotateImage(const cv::Mat& image, double angle);
     static void resetImage(const std::string& artworkId);
+    static QPixmap matToPixmap(const cv::Mat& image);
+    static cv::Mat pixmapToMat(const QPixmap& pixmap);
 };
 
 #endif // ARTWORK_MANAGER_H

@@ -20,7 +20,6 @@ public:
     static void updateUsage(const std::string& artworkId);
     static void addImage(const std::string& artworkId, const cv::Mat& image);
     static cv::Mat getCachedImage(const std::string& artworkId);
-    static QPixmap matToQPixmap(const cv::Mat& mat);
 };
 
 #endif // IMAGE_CACHE_H

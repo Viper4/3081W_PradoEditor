@@ -74,35 +74,3 @@ cv::Mat ImageCache::getCachedImage(const std::string& artworkId) {
     //updateUsage(artworkId);
     return imageMap[artworkId];
 }
-
-QPixmap ImageCache::matToQPixmap(const cv::Mat& image) {
-    // Contributors: https://forum.qt.io/topic/160407/convert-cv-mat-into-qpixmap
-    // Purpose: Converts a cv::Mat to a QPixmap
-    // Parameters: cv::Mat image - The image to convert
-    // Return Value: QPixmap
-    // Limitations: Only supports CV_8UC1 and CV_8UC3
-    // -------------------
-    // Check if image is empty
-    if (image.empty()) {
-        std::cout << "WARNING: Converting empty image to QPixmap" << std::endl;
-        return QPixmap();
-    }
-
-    // Convert the cv::Mat to QImage and then to QPixmap
-    QImage qimage;
-    cv::Mat rgb;
-    switch (image.type()) {
-    case CV_8UC1: // Grayscale
-        qimage = QImage(image.data, image.cols, image.rows, image.step, QImage::Format_Grayscale8);
-        break;
-    case CV_8UC3: // Color BGR
-        // OpenCV uses BGR, but Qt expects RGB
-        cv::cvtColor(image, rgb, cv::COLOR_BGR2RGB);
-        qimage = QImage(rgb.data, rgb.cols, rgb.rows, rgb.step, QImage::Format_RGB888);
-        break;
-    default:
-        std::cerr << "Unsupported image type for conversion: " << image.type() << std::endl;
-        return QPixmap();
-    }
-    return QPixmap::fromImage(qimage.copy()); // copy to detach from OpenCV data
-}

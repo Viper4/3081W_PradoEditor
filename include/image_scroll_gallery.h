@@ -7,6 +7,7 @@
 #include <opencv2/core.hpp>
 #include <QListView>
 #include <artwork.h>
+#include <QStandardItem>
 
 class ImageScrollGallery : public QWidget {
 private:
@@ -16,6 +17,7 @@ private:
 	int numTotalImages;
 	QIcon placeholderIcon;
 	int previousFirstIndex;
+	QStandardItemModel* model;
 
 	void loadImagesInView(int firstIndex, int lastIndex);
 	void onScroll(int value);
@@ -23,7 +25,7 @@ private:
 
 public:
 	static std::unordered_map<std::string, Artwork> GlobalGallery;
-
+	QStandardItem* selectedItem;
 	ImageScrollGallery(QListView* listView, int iconSize, int itemSize);
 };
 

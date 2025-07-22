@@ -52,7 +52,7 @@ void PradoEditorMobileInterface::sortArtworks(const SortCriteria &criteria, std:
             });
         break;
 	default:
-        std::cout << "Unknown sorting criteria: " << criteria << std::endl;
+        std::cout << "sortArtworks : Unknown sorting criteria: " << criteria << std::endl;
         break;
     }
 }
