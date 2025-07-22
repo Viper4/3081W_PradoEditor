@@ -25,6 +25,7 @@ private slots:
     void on_btnBack_clicked();
     void on_btnForward_clicked();
     void on_btnSave_clicked();
+    void on_btnDoSearch_clicked();
 
 private:
     Ui::PradoEditor ui;
@@ -35,5 +36,6 @@ private:
     std::vector<int> forwardPageStack;
 
     void setHomeBtnVisible(bool visible);
-    void changePage(int page, bool addToStack);
+    void changePageIndex(int index, bool addToStack);
+    void changePage(QWidget* page, bool addToStack);
 };

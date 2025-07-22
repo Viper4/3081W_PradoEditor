@@ -3,6 +3,7 @@
 #include <image_scroll_gallery.h>
 #include <managers.h>
 #include <opencv2/opencv.hpp>
+#include <qdir.h>
 
 PradoEditor::PradoEditor(QWidget *parent)
     : QMainWindow(parent)
@@ -47,9 +48,9 @@ void PradoEditor::setHomeBtnVisible(bool visible) {
 	ui.btnHome->setVisible(visible);
 }
 
-void PradoEditor::changePage(int page, bool addToStack) {
+void PradoEditor::changePageIndex(int index, bool addToStack) {
 	// Contributors: Lucas Giebler
-	// Purpose: Changes the current page
+	// Purpose: Changes the current page to the given page index
 	// Parameters: 
 	// Return Value: void
 	// Limitations:
@@ -60,8 +61,22 @@ void PradoEditor::changePage(int page, bool addToStack) {
     ui.btnBack->setEnabled(backPageStack.size() > 0);
     ui.btnForward->setEnabled(forwardPageStack.size() > 0);
 
-	ui.stackedWidget->setCurrentIndex(page);
-    setHomeBtnVisible(page != 0);
+	ui.stackedWidget->setCurrentIndex(index);
+    setHomeBtnVisible(index != 0);
+}
+
+void PradoEditor::changePage(QWidget* page, bool addToStack) {
+    // Contributors: Lucas Giebler
+    // Purpose: Finds the matching page widget in ui.stackedWidget and changes to it
+    // Parameters: 
+    // Return Value: void
+    // Limitations:
+    for (int i = 0; i < ui.stackedWidget->count(); i++) {
+        if (ui.stackedWidget->widget(i) == page) {
+            changePageIndex(i, addToStack);
+            return;
+        }
+    }
 }
 
 void PradoEditor::on_btnHome_clicked() {
@@ -70,7 +85,7 @@ void PradoEditor::on_btnHome_clicked() {
     // Parameters:
     // Return Value: void
     // Limitations:
-    changePage(0, true);
+    changePage(ui.pageHome, true);
 }
 
 void PradoEditor::on_btnExpand_clicked() {
@@ -79,17 +94,17 @@ void PradoEditor::on_btnExpand_clicked() {
 	// Parameters: 
 	// Return Value: void
     // Limitations:
-    std::cout << "Expand Button Clicked" << std::endl;
+    std::cout << "PradoEditor::on_btnExpand_clicked : Expand Button Clicked" << std::endl;
     if (gallery->selectedItem == nullptr) {
         return;
     }
 
     std::string artworkId = gallery->selectedItem->data(Qt::UserRole).toString().toStdString();
     if (ImageScrollGallery::GlobalGallery.count(artworkId) == 0) {
-        std::cout << "Artwork ID '" << artworkId << "' not found." << std::endl;
+        std::cout << "PradoEditor::on_btnExpand_clicked : Artwork ID '" << artworkId << "' not found." << std::endl;
         return;
     }
-    changePage(1, true); // Switch to the details page
+    changePage(ui.pageDetails, true); // Switch to the details page
     Artwork art = ImageScrollGallery::GlobalGallery.at(artworkId); // Get the Artwork object
     QIcon icon = gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>(); // Get the artwork's icon
 
@@ -105,7 +120,8 @@ void PradoEditor::on_btnSearch_clicked() {
 	// Parameters:
 	// Return Value: void
 	// Limitations:
-    std::cout << "Search Button Clicked" << std::endl;
+    std::cout << "PradoEditor::on_btnSearch_clicked : Search Button Clicked" << std::endl;
+	changePage(ui.pageSearch, true);
 }
 
 void PradoEditor::on_btnFavorites_clicked() {
@@ -114,8 +130,8 @@ void PradoEditor::on_btnFavorites_clicked() {
     // Parameters:
     // Return Value: void
     // Limitations:
-    std::cout << "Favorites Button Clicked" << std::endl;
-	changePage(3, true);
+    std::cout << "PradoEditor::on_btnFavorites_clicked : cked" << std::endl;
+	changePage(ui.pageFavorites, true);
 }
 
 void PradoEditor::on_btnEditImage_clicked() {
@@ -124,8 +140,8 @@ void PradoEditor::on_btnEditImage_clicked() {
 	// Parameters: 
     // Return Value: void
     // Limitations: 
-	std::cout << "Edit Image Button Clicked" << std::endl;
-    changePage(2, true); // Switch to the edit page
+	std::cout << "PradoEditor::on_btnEditImage_clicked : Edit Image Button Clicked" << std::endl;
+    changePage(ui.pageFilter, true); // Switch to the edit page
     QIcon icon = gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>(); // Get the artwork's icon
     ui.labelPreview->setPixmap(icon.pixmap(300, 300));
 }
@@ -136,7 +152,7 @@ void PradoEditor::on_filterDropdown_currentIndexChanged(int index) {
     // Parameters: 
     // Return Value: void
     // Limitations: 
-    std::cout << "Filter Option Selected" << std::endl;
+    std::cout << "PradoEditor::on_filterDropdown_currentIndexChanged : Filter Option Selected" << std::endl;
     selectedFilter = ui.filterDropdown->itemText(index).toStdString();
 }
 
@@ -146,16 +162,14 @@ void PradoEditor::on_btnApplyFilter_clicked() {
     // Parameters: 
     // Return Value: void
     // Limitations: 
-    std::cout << "Apply Filter Button Clicked" << std::endl;
+    std::cout << "PradoEditor::on_btnApplyFilter_clicked : Apply Filter Button Clicked" << std::endl;
     std::string artworkId = gallery->selectedItem->data(Qt::UserRole).toString().toStdString();
 	cv::Mat previewImage = ArtworkManager::pixmapToMat(ui.labelPreview->pixmap());
-    std::cout << "previewImage is of type " << previewImage.type() << std::endl;
     if (stringToFilterType.count(selectedFilter) == 0) {
-		std::cout << "Selected filter '" << selectedFilter << "' not found." << std::endl;
+		std::cout << "PradoEditor::on_btnApplyFilter_clicked : Selected filter '" << selectedFilter << "' not found." << std::endl;
         return;
     }
     cv::Mat filteredImage = ArtworkManager::applyFilter(previewImage, stringToFilterType.at(selectedFilter));
-    std::cout << "filteredImage is of type " << previewImage.type() << std::endl;
     QPixmap pixmap = ArtworkManager::matToPixmap(filteredImage);
     ui.labelPreview->setPixmap(pixmap);
 	ui.labelPreview->setMinimumSize(300, 300);
@@ -167,7 +181,7 @@ void PradoEditor::on_btnReset_clicked() {
 	// Parameters: 
 	// Return Value: void
 	// Limitations: 
-	std::cout << "Reset Button Clicked" << std::endl;
+	std::cout << "PradoEditor::on_btnReset_clicked : Reset Button Clicked" << std::endl;
 	std::string artworkId = gallery->selectedItem->data(Qt::UserRole).toString().toStdString();
     ui.labelPreview->setPixmap(gallery->selectedItem->data(Qt::DecorationRole).value<QIcon>().pixmap(300, 300));
 }
@@ -178,7 +192,7 @@ void PradoEditor::on_btnBack_clicked() {
     // Parameters:
     // Return Value: void
 	// Limitations:
-    std::cout << "Back Button Clicked" << std::endl;
+    std::cout << "PradoEditor::on_btnBack_clicked : Back Button Clicked" << std::endl;
     if (backPageStack.size() == 0) {
 		return;
 	}
@@ -187,7 +201,7 @@ void PradoEditor::on_btnBack_clicked() {
     forwardPageStack.push_back(ui.stackedWidget->currentIndex());
     int page = backPageStack.back();
     backPageStack.pop_back();
-    changePage(page, false);
+    changePageIndex(page, false);
 }
 
 
@@ -197,7 +211,7 @@ void PradoEditor::on_btnForward_clicked() {
     // Parameters:
     // Return Value: void
     // Limitations:
-    std::cout << "Forward Button Clicked" << std::endl;
+    std::cout << "PradoEditor::on_btnForward_clicked : Forward Button Clicked" << std::endl;
     if (forwardPageStack.size() == 0) {
         return;
     }
@@ -206,7 +220,7 @@ void PradoEditor::on_btnForward_clicked() {
     backPageStack.push_back(ui.stackedWidget->currentIndex());
     int page = forwardPageStack.back();
     forwardPageStack.pop_back();
-    changePage(page, false);
+    changePageIndex(page, false);
 }
 
 void PradoEditor::on_btnSave_clicked() {
@@ -215,7 +229,45 @@ void PradoEditor::on_btnSave_clicked() {
 	// Parameters:
 	// Return Value: void
 	// Limitations:
-	std::cout << "Save Button Clicked" << std::endl;
+	std::cout << "PradoEditor::on_btnSave_clicked : Save Button Clicked" << std::endl;
     cv::Mat previewImage = ArtworkManager::pixmapToMat(ui.labelPreview->pixmap());
-    cv::imwrite("edited_image.jpg", previewImage);
+    std::string filename = ui.lineEditSave->text().toStdString();
+
+    // TODO: Do better filename validation or just automatically append .jpg
+    if (filename.length() == 0) {
+        std::cout << "PradoEditor::on_btnSave_clicked : Invalid filename: '" << filename << "'" << std::endl;
+        return;
+    }
+
+    QDir dir;
+    // Check if the directory exists; if not, create it
+    if (!dir.exists("saved_images/")) {
+        if (!dir.mkpath("saved_images/")) {
+            std::cout << "PradoEditor::on_btnSave_clicked : Failed to create directory 'saved_images/'" << std::endl;
+            return;
+        }
+    }
+    // TODO: Check if file already exists and do handling
+    cv::imwrite("saved_images/" + ui.lineEditSave->text().toStdString(), previewImage);
+    std::cout << "PradoEditor::on_btnSave_clicked : Image saved to " << "saved_images/" + ui.lineEditSave->text().toStdString() << std::endl;
+}
+
+void PradoEditor::on_btnDoSearch_clicked() {
+	// Contributors: Lucas Giebler
+	// Purpose: Reads the text from the search bar and uses it to search for artworks using levenshtein distance
+	// Parameters:
+	// Return Value: void
+	// Limitations:
+	std::cout << "PradoEditor::on_btnDoSearch_clicked : Search Button Clicked" << std::endl;
+    // Get the text from the search bar
+	std::string searchQuery = ui.lineEditSearch->text().toStdString();
+
+	// Search for artworks using levenshtein distance
+    // TODO: Implement a priority queue to store the closest artworks
+    std::vector<std::string> closestArtworks;
+    for (std::pair<std::string, Artwork> artwork : ImageScrollGallery::GlobalGallery) {
+        // TODO: Also need to fix errors with levenshteinDist() in levenshtein.cpp
+        //int distance = levenshteinDist(artwork.first, searchQuery);
+
+    }
 }

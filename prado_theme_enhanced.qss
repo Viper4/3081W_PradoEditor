@@ -38,8 +38,17 @@ QTextEdit#textEditArtworkDescription {
     padding: 4px;
 }
 
-/* Combo Boxes */
+/* Default Combo Boxes */
 QComboBox {
+    font-family: "Helvetica Neue", "Open Sans", sans-serif;
+    font-size: 16px;
+    color: #F3E6D0;
+    background-color: #5E533F;
+    padding: 4px;
+}
+
+/* Default Line Edits */
+QLineEdit {
     font-family: "Helvetica Neue", "Open Sans", sans-serif;
     font-size: 16px;
     color: #F3E6D0;
