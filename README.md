@@ -153,6 +153,7 @@ ctest --verbose
   
 ### :grey_question: FAQ 
 **Q: The application can't find Qt or OpenCV during build. What should I do?**  
+
 A: Make sure you have installed the required dependencies. For Windows, set environment variables:
 ```bash
 setx OpenCV_DIR "C:\path\to\opencv\build"
@@ -162,10 +163,12 @@ setx Qt5_DIR "C:\path\to\Qt\5.x\msvc2019_64\lib\cmake\Qt5"
 **Q: Images are not loading in the gallery. Why?**
 
 A: Check that:
+- The `images/` directory exists in the project root.
+- Filenames in the CSV match the actual image names.
 
-The `images/` directory exists in the project root.
+**Q: Where are my edited images saved?**
 
-Filenames in the CSV match the actual image names.
+A: By default, edited images are saved in the `saved_images/` directory in the project root.
 
 ## :wave: Authors
 - [Huiwen Jia](https://github.com/jAww404)
