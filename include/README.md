@@ -39,8 +39,7 @@ This document describes the header files that define the core architecture of th
       - `getCachedImage`
       - `addImage`
       - `updateUsage` 
-   - **NOTE:** scroll+cache approach was deprecated in Version 1.0, this header remains for optional reactivation in later versions.
-
+  
 ## Purpose:
 
 These headers separate interfaces from implementation to promote clean modularization by:
@@ -59,6 +58,11 @@ Provides image processing functionality. cv::Mat is used for operations such as 
 Required for GUI components and image handling. Includes:
 - QMainWindow (in prado_editor.h) for the main application window.
 - QPixmap for efficient image representation and rendering in the UI.
+
+### [**cURL**](https://curl.se/)
+Used for network operations to retrieve artwork images from URLs.
+- Supports HTTP(S) requests for searching for images in the dataset.
+- Ensures integration with OpenCV for loading images after download.
 
 ### **C++ Standard Library**
 Common containers and utilities:
