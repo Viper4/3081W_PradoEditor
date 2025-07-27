@@ -160,6 +160,7 @@ setx Qt5_DIR "C:\path\to\Qt\5.x\msvc2019_64\lib\cmake\Qt5"
 ```
 
 **Q: Images are not loading in the gallery. Why?**
+
 A: Check that:
 
 The `images/` directory exists in the project root.
