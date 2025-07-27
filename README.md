@@ -125,8 +125,32 @@ Unit tests are implemented with **Google Test:**
 ctest --verbose
 ```   
    
-## :eyes: Usage TO_DO
+## :eyes: Usage
 
+### Searching the Gallery
+
+- Type either the artist name, artwork title, or ID into the artwork search bar
+- Browse and select the artwork you want to edit. Supported format: `.jpg`.
+
+### **Opening an Image**
+
+- Click on the selected artwork, it will open in a new page as a `.jpg` image.
+- View additional information about the artwork, such as its description, year created, and dimensions.
+
+### **Editing Workflow**
+
+- Use the toolbar options to apply filters, crop, or rotate the image.
+- Applying Filters
+    - Select between grayscale, invert, and blur options using the toolbar.
+- Cropping the Image
+    - Adjust the cropping border on the image and drag to adjust the image size.
+- Rotating the Image
+    - Enter the desired rotation angle in degrees and click “Rotate”.
+
+### Saving & Exporting an Image
+
+- Click “Save” to save an edited copy of the original artwork to your device.
+  
 ### :grey_question: FAQ 
 **Q: The application can't find Qt or OpenCV during build. What should I do?**  
 A: Make sure you have installed the required dependencies. For Windows, set environment variables:
@@ -135,6 +159,13 @@ setx OpenCV_DIR "C:\path\to\opencv\build"
 setx Qt5_DIR "C:\path\to\Qt\5.x\msvc2019_64\lib\cmake\Qt5"
 ```
 
+Q: Images are not loading in the gallery. Why?
+A: Check that:
+
+The `images/` directory exists in the project root.
+
+Filenames in the CSV match the actual image names.
+
 ## :wave: Authors
 - [Huiwen Jia](https://github.com/jAww404)
 - [Lucas Gieber](https://github.com/Viper4)
@@ -142,16 +173,20 @@ setx Qt5_DIR "C:\path\to\Qt\5.x\msvc2019_64\lib\cmake\Qt5"
 - [Taro Welches](https://github.com/tarowelches)
 
 ## :scroll: Version History
+- 1.1
+  - Implemented basic UI using Qt.
+  - Full access to the Prado's painting collection using cURL.
+  - Added artwork sorting options.
 - 1.0
-  - Initial Release
+  - Initial release
 
-## :handshake: Help & Documentation TO_DO
-
-command to run if program contains helper info
+## :handshake: Help & Documentation
 
 Project Link: https://github.com/Viper4/3081W_PradoEditor
 
 Full Documentation: 
+- [Users Manual](https://www.notion.so/Prado-Editor-User-s-Manual-2374a6836ecd80fb9fe6dd5145d7040a?source=copy_link)
+- [Developer's Guide](https://www.notion.so/Prado-Editor-Developer-s-Guide-2374a6836ecd8063aee8e5920f76e917?source=copy_link)
 
 ## :warning: License 
 
