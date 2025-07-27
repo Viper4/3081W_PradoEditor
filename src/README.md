@@ -34,14 +34,12 @@ This directory contains the C++ source files for the Prado Editor application. T
 - **Features:**
   - Enables fast image retrieval
   - Prevents duplicate storage: ensures only one copy of each image is held in memory
-- **NOTE:** To be implemented in the final version of the application, not applicable to Version 1.0.
 
 5. **`image_scroll_gallery.cpp`**
 - **Purpose:** Implements a Qt widget (`ImageScrollGallery`) to display artwork images in grid view.
 - **Features:**
   - Scroll-based UI updates
   - Dynamic image loading
-- **NOTE:** To be implemented in the final version of the application, not applicable to Version 1.0.
 
 6. **`prado_editor.cpp`**
 - **Purpose:** Defines the main application window and connects the UI to the backend.
@@ -67,6 +65,10 @@ The .cpp files rely on the following libraries and headers:
 ### [Qt](https://www.qt.io/)
 - GUI framework for creating the application window and widgets via `QtWidgets/QApplication`.
 - `QMainWindow` in prado_editor.cpp and `QPixmap` for image rendering.
+
+### [cURL](https://curl.se/)
+-Handles HTTP(S) requests for downloading edited images from URLs.
+-Integrated in `managers.cpp` for fetching artwork images referenced in the dataset.
 
 ### C++ Standard Library
 - `<map>` and `<unordered_map>`: Used for caching in `image_cache.cpp`.
