@@ -132,10 +132,17 @@ ctest --verbose
 - Type either the artist name, artwork title, or ID into the artwork search bar
 - Browse and select the artwork you want to edit. Supported format: `.jpg`.
 
+<img width="512" height="1045" alt="image" src="https://github.com/user-attachments/assets/899dffa8-bac9-4b3d-ab2d-53db4343fef2" />
+
+<img width="510" height="1046" alt="image" src="https://github.com/user-attachments/assets/5ec3eb14-8094-4ec0-a560-9f757254af17" />
+
+
 ### **Opening an Image**
 
 - Click on the selected artwork, it will open in a new page as a `.jpg` image.
 - View additional information about the artwork, such as its description, year created, and dimensions.
+
+<img width="511" height="1045" alt="image" src="https://github.com/user-attachments/assets/f357cc1f-c89e-47d8-aa7c-67f1a3c5c1b5" /> 
 
 ### **Editing Workflow**
 
@@ -146,6 +153,8 @@ ctest --verbose
     - Adjust the cropping border on the image and drag to adjust the image size.
 - Rotating the Image
     - Enter the desired rotation angle in degrees and click “Rotate”.
+ 
+ <img width="508" height="1046" alt="image" src="https://github.com/user-attachments/assets/8dc647d3-9c6b-4e11-8270-4c39d6042dfa" />
 
 ### Saving & Exporting an Image
 
